@@ -1,7 +1,6 @@
 import 'package:coopa/theme/style.dart';
 import 'package:coopa/users/screens/account_screen/account_screen.dart';
 import 'package:coopa/users/screens/home_screen/home_screen.dart';
-import 'package:coopa/users/screens/view_product_screen/view_product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -17,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Text("ds"),
+    HomeScreen(),
     // ViewProductScreen(),
     // FriendsScreen(),
     AccountScreen(),
@@ -39,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Primary0,
+        backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         selectedLabelStyle:
