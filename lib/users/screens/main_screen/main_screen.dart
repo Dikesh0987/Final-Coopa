@@ -1,6 +1,8 @@
-import 'package:coopa/theme/style.dart';
-import 'package:coopa/users/screens/account_screen/account_screen.dart';
+import 'package:coopa/users/screens/feed_screen/feed_screen.dart';
 import 'package:coopa/users/screens/home_screen/home_screen.dart';
+import 'package:coopa/users/screens/account_screen/settings_screen.dart';
+import 'package:coopa/users/screens/offers_screen/offers_screen.dart';
+import 'package:coopa/users/screens/search_screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -16,9 +18,9 @@ class _MainScreenState extends State<MainScreen> {
 
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    HomeScreen(),
-    // ViewProductScreen(),
-    // FriendsScreen(),
+    FeedScreen(),
+    SearchScreen(),
+    // OffersScreen(),
     AccountScreen(),
   ];
 
@@ -49,17 +51,20 @@ class _MainScreenState extends State<MainScreen> {
         onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.store),
-            label: 'Radar',
+            icon: Icon(FontAwesomeIcons.house),
+            label: 'Home',
           ),
-
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.percent),
-            label: 'Offers',
+            icon: Icon(FontAwesomeIcons.rss),
+            label: 'Feed',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.magnifyingGlass),
+            label: 'Search',
           ),
           // BottomNavigationBarItem(
-          //   icon: Icon(FontAwesomeIcons.userGroup),
-          //   label: 'Friends',
+          //   icon: Icon(FontAwesomeIcons.percent),
+          //   label: 'Offers',
           // ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.user),

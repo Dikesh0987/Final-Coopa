@@ -127,9 +127,9 @@ class _GetInTouchScreenState extends State<GetInTouchScreen> {
                         alignment: Alignment.bottomRight,
                         child: MaterialButton(
                           minWidth: 100,
-                          height: 50,
+                          height: 40,
                           child: Text(
-                            'Send',
+                            'send',
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -138,7 +138,7 @@ class _GetInTouchScreenState extends State<GetInTouchScreen> {
                           color: Colors.black,
                           shape: RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0))),
+                                  BorderRadius.all(Radius.circular(15.0))),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               // TODO: implement sending the message

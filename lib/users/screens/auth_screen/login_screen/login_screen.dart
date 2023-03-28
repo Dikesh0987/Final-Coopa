@@ -73,21 +73,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(color: Colors.black)),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(color: Colors.black)),
                 hintText: "Email",
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
             ),
             SizedBox(
               height: 30,
             ),
             MaterialButton(
-              height: 50,
+              height: 45,
               minWidth: double.infinity,
               onPressed: () {
                 Navigator.push(context,
@@ -96,13 +96,15 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Primary1,
               child: Text(
                 "CONTINUE",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(50)),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Row(
               children: [
@@ -125,10 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             MaterialButton(
-              height: 50,
+              height: 45,
               minWidth: double.infinity,
               onPressed: () {
                 Navigator.push(context,
@@ -140,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(color: Primary1),
               ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

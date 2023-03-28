@@ -1,3 +1,4 @@
+import 'package:coopa/stores/screens/edit_account_details_screen/edit_account_details_screen.dart';
 import 'package:coopa/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
         ),
-        home: Welcome());
+        initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        '/': (context) => const Welcome(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/edit_account': (context) => const DetailEditPage(),
+      },
+      );
   }
 }
  

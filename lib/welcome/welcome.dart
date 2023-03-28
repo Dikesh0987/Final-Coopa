@@ -8,31 +8,41 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("welcome"),
-        ),
-        body: SafeArea(
-            child: Column(
+      appBar: AppBar(
+        title: Text('Get Started'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            MaterialButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => StoreWelcomeScreen()));
-              },
-              child: Text("store"),
+            Text(
+              'Welcome to Coopa',
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
             ),
-            MaterialButton(
+            SizedBox(height: 16.0),
+            Text(
+              'Let\'s get started!',
+              style: TextStyle(fontSize: 18.0),
+            ),
+            SizedBox(height: 32.0),
+            ElevatedButton(
+              child: Text('Get Started'),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UsersWelcomeScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => StoreWelcomeScreen()));
               },
-              child: Text("user"),
+            ),
+            SizedBox(height: 32.0),
+            ElevatedButton(
+              child: Text('Get Started'),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => UsersWelcomeScreen()));
+              },
             ),
           ],
-        )));
+        ),
+      ),
+    );
   }
 }

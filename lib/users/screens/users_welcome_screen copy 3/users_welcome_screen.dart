@@ -60,7 +60,7 @@ class UsersWelcomeScreen extends StatelessWidget {
               height: 50,
             ),
             MaterialButton(
-              height: 50,
+              height: 45,
               minWidth: double.infinity,
               onPressed: () {
                 Navigator.push(context,
@@ -72,13 +72,13 @@ class UsersWelcomeScreen extends StatelessWidget {
                 style: TextStyle(color: Primary1),
               ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(50)),
             ),
             SizedBox(
               height: 20,
             ),
             MaterialButton(
-              height: 50,
+              height: 45,
               minWidth: double.infinity,
               onPressed: () {
                 Navigator.push(context,
@@ -90,7 +90,7 @@ class UsersWelcomeScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

@@ -108,14 +108,14 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                   ),
                 ),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(color: Colors.black)),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(color: Colors.black)),
                 hintText: "Store name",
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
             ),
             SizedBox(
@@ -131,21 +131,21 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                   ),
                 ),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(color: Colors.black)),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(color: Colors.black)),
                 hintText: "Password",
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             MaterialButton(
-              height: 50,
+              height: 45,
               minWidth: double.infinity,
               onPressed: () {
                 Navigator.push(
@@ -159,7 +159,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),
