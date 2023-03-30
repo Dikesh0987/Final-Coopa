@@ -96,10 +96,10 @@ class OtpVerify extends StatelessWidget {
               height: 45,
               minWidth: double.infinity,
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AccountSetupScreen()));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => AccountSetupScreen()));
               },
               color: Primary1,
               child: Text(

@@ -49,10 +49,10 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
         body: ListView(
-          padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+          padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
           children: <Widget>[
             Container(
-              height: 125.0,
+              height: 110.0,
               width: double.infinity,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -61,8 +61,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   Column(
                     children: <Widget>[
                       Container(
-                          height: 70.0,
-                          width: 70.0,
+                          height: 60.0,
+                          width: 60.0,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(35.0),
                               color: Colors.orange),
@@ -80,38 +80,38 @@ class _SearchScreenState extends State<SearchScreen> {
                     ],
                   ),
                   SizedBox(width: 25.0),
-                  listItem('assets/chris.jpg', 'Chris', true),
+                  listItem('assets/images/dm1.jpg', 'Chris', true),
                   SizedBox(width: 25.0),
-                  listItem('assets/hugh.jpg', 'Hugh', false),
+                  listItem('assets/images/dm1.jpg', 'Hugh', false),
                   SizedBox(width: 25.0),
-                  listItem('assets/johnnydepp.jpg', 'Depp', false),
+                  listItem('assets/images/dm1.jpg', 'Depp', false),
                   SizedBox(width: 25.0),
-                  listItem('assets/tomcruise.jpg', 'Tom', false),
+                  listItem('assets/images/dm1.jpg', 'Tom', false),
                 ],
               ),
             ),
             SizedBox(height: 15.0),
-            firstStyleRow(
-                'assets/cone.jpeg', 'assets/letter.jpeg', 'assets/chris.jpg'),
+            firstStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
+                'assets/images/dm1.jpg'),
             SizedBox(height: 10.0),
-            secondStyleRow('assets/window.jpeg', 'assets/cactus.jpeg',
-                'assets/tomcruise.jpg'),
-            SizedBox(height: 10.0),
-            infoRow(),
-            SizedBox(height: 15.0),
-            firstStyleRow(
-                'assets/cone.jpeg', 'assets/letter.jpeg', 'assets/chris.jpg'),
-            SizedBox(height: 10.0),
-            secondStyleRow('assets/window.jpeg', 'assets/cactus.jpeg',
-                'assets/tomcruise.jpg'),
+            secondStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
+                'assets/images/dm1.jpg'),
             SizedBox(height: 10.0),
             infoRow(),
             SizedBox(height: 15.0),
-            firstStyleRow(
-                'assets/cone.jpeg', 'assets/letter.jpeg', 'assets/chris.jpg'),
+            firstStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
+                'assets/images/dm1.jpg'),
             SizedBox(height: 10.0),
-            secondStyleRow('assets/window.jpeg', 'assets/cactus.jpeg',
-                'assets/tomcruise.jpg'),
+            secondStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
+                'assets/images/dm1.jpg'),
+            SizedBox(height: 10.0),
+            infoRow(),
+            SizedBox(height: 15.0),
+            firstStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
+                'assets/images/dm1.jpg'),
+            SizedBox(height: 10.0),
+            secondStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
+                'assets/images/dm1.jpg'),
             SizedBox(height: 10.0),
             infoRow(),
           ],
@@ -143,7 +143,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15.0),
                               image: DecorationImage(
-                                  image: AssetImage('assets/chris.jpg'),
+                                  image: AssetImage('assets/images/dm1.jpg'),
                                   fit: BoxFit.cover)),
                         ),
                         Column(
@@ -186,7 +186,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15.0),
                               image: DecorationImage(
-                                  image: AssetImage('assets/tomcruise.jpg'),
+                                  image: AssetImage('assets/images/dm1.jpg'),
                                   fit: BoxFit.cover)),
                         ),
                         Column(
@@ -355,8 +355,8 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       children: <Widget>[
         Container(
-          height: 70.0,
-          width: 70.0,
+          height: 60.0,
+          width: 60.0,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(35.0),
               image: DecorationImage(

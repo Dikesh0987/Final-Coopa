@@ -1,31 +1,52 @@
-import 'package:coopa/stores/screens/edit_account_details_screen/edit_account_details_screen.dart';
 import 'package:coopa/welcome/welcome.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-void main() {
-  runApp(const MyApp());
+// FireBase Init
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Enter Full Screen
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+      .then((_) async {
+    try {
+      await Firebase.initializeApp();
+    } catch (e) {
+      // Handle error
+      print('Failed to initialize Firebase: $e');
+    }
+
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Coopa',
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-        initialRoute: '/',
+      debugShowCheckedModeBanner: false,
+      title: 'Coopa',
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+      ),
+      initialRoute: '/',
       routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => const Welcome(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/edit_account': (context) => const DetailEditPage(),
+        // When navigating to the "/" route, build the Welcome widget.
+        '/': (_) => const Welcome(),
       },
-      );
+    );
   }
 }
- 

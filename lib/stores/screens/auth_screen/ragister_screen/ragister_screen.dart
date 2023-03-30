@@ -1,8 +1,16 @@
 import 'package:coopa/stores/screens/auth_screen/account_setup_screen/account_setup_screen.dart';
 import 'package:coopa/stores/screens/auth_screen/ragister_screen/otp_verify.dart';
+import 'package:coopa/stores/screens/main_screen/main_screen.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:coopa/stores/helper/dialogs.dart';
+
+import 'package:coopa/stores/services/auth_apis.dart';
+
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class RagisterScreen extends StatefulWidget {
   const RagisterScreen({super.key});
@@ -12,6 +20,60 @@ class RagisterScreen extends StatefulWidget {
 }
 
 class _RagisterScreenState extends State<RagisterScreen> {
+  /// Handel google btn
+  _handleGoogleBtnClick() async {
+    // internet/wifi connection issue
+    try {
+      //checking internet connections ....
+      await InternetAddress.lookup('google.com');
+
+      // progress indicator ....
+      CustomDialog.showProgressDialog(context);
+
+      // Call google sign in function ....
+      _signInWithGoogle().then((user) async {
+        if (user != null) {
+          // Stop progress indicator
+          Navigator.pop(context);
+
+          if ((await AuthAPI.storeExists())) {
+            // show diog for allready exit user
+            CustomDialog.showSnackBar(
+                context, "This email have an already account. ");
+          } else {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => AccountSetupScreen()));
+          }
+        }
+      });
+    } catch (e) {
+      print("_signInWithGoogle : $e");
+
+      // Show no internrt connections msg in snackbar ....
+      CustomDialog.showSnackBar(context, "No Internet/wifi Connection !");
+      return null;
+    }
+  }
+
+  // For Google Sign Oprations...
+  Future<UserCredential?> _signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await AuthAPI.auth.signInWithCredential(credential);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,10 +193,7 @@ class _RagisterScreenState extends State<RagisterScreen> {
               height: 45,
               minWidth: double.infinity,
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AccountSetupScreen()));
+                _handleGoogleBtnClick();
               },
               color: Colors.white,
               child: Text(
