@@ -1,4 +1,4 @@
-import 'package:coopa/users/screens/account_screen/constants/constants.dart';
+import 'package:coopa/stores/screens/account_screen/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class SupportCard extends StatelessWidget {

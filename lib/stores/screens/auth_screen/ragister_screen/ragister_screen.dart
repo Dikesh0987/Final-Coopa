@@ -1,11 +1,10 @@
+import 'package:coopa/stores/helper/dailogs.dart';
 import 'package:coopa/stores/screens/auth_screen/account_setup_screen/account_setup_screen.dart';
 import 'package:coopa/stores/screens/auth_screen/ragister_screen/otp_verify.dart';
 import 'package:coopa/stores/screens/main_screen/main_screen.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:coopa/stores/helper/dialogs.dart';
-
 import 'package:coopa/stores/services/auth_apis.dart';
 
 import 'dart:io';
@@ -29,7 +28,6 @@ class _RagisterScreenState extends State<RagisterScreen> {
 
       // progress indicator ....
       CustomDialog.showProgressDialog(context);
-
       // Call google sign in function ....
       _signInWithGoogle().then((user) async {
         if (user != null) {
@@ -38,8 +36,7 @@ class _RagisterScreenState extends State<RagisterScreen> {
 
           if ((await AuthAPI.storeExists())) {
             // show diog for allready exit user
-            CustomDialog.showSnackBar(
-                context, "This email have an already account. ");
+            CustomDialog.showSnackBar(context, "This is email already exist");
           } else {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => AccountSetupScreen()));

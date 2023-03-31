@@ -1,4 +1,4 @@
-import 'package:coopa/stores/helper/dialogs.dart';
+import 'package:coopa/stores/helper/dailogs.dart';
 import 'package:coopa/stores/screens/auth_screen/login_screen/password_screen.dart';
 import 'package:coopa/stores/screens/main_screen/main_screen.dart';
 import 'package:coopa/stores/services/auth_apis.dart';

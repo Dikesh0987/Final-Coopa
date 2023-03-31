@@ -1,13 +1,15 @@
-import 'package:coopa/users/screens/account_screen/constants/constants.dart';
-import 'package:coopa/users/screens/account_screen/model/model.dart';
+import 'package:coopa/stores/model/store_model.dart';
+import 'package:coopa/stores/screens/account_screen/constants/constants.dart';
+import 'package:coopa/stores/screens/account_screen/model/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingTile extends StatelessWidget {
+  final Store store;
   final Setting setting;
   const SettingTile({
     super.key,
-    required this.setting,
+    required this.setting, required this.store,
   });
 
   @override

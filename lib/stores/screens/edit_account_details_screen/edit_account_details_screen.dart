@@ -1,20 +1,22 @@
+import 'dart:io';
+import 'package:coopa/stores/helper/dailogs.dart';
+import 'package:coopa/stores/model/store_model.dart';
+import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DetailEditPage extends StatefulWidget {
-  const DetailEditPage({Key? key}) : super(key: key);
-
+  const DetailEditPage({Key? key, required this.store}) : super(key: key);
+  final Store store;
   @override
   _DetailEditPageState createState() => _DetailEditPageState();
 }
 
 class _DetailEditPageState extends State<DetailEditPage> {
   final _formKey = GlobalKey<FormState>();
-
-  String _name = '';
-  String _email = '';
-  String _phoneNumber = '';
+  String? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -75,19 +77,17 @@ class _DetailEditPageState extends State<DetailEditPage> {
                             width: 150,
                             height: 150,
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                      widget.store.images,
+                                    ),
+                                    fit: BoxFit.cover),
                                 borderRadius: BorderRadius.circular(10)),
-                            child: Center(
-                              child: Icon(
-                                FontAwesomeIcons.camera,
-                                size: 50,
-                              ),
-                            ),
                           ),
                         ],
                       ),
                       SizedBox(
-                        width: 20,
+                        width: 10,
                       ),
                       Expanded(
                         child: Column(
@@ -100,16 +100,21 @@ class _DetailEditPageState extends State<DetailEditPage> {
                             SizedBox(
                               height: 5,
                             ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                child: Icon(
-                                  FontAwesomeIcons.camera,
-                                  size: 50,
+                            GestureDetector(
+                              onTap: () {
+                                _showBottomShit();
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black26),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: Icon(
+                                    FontAwesomeIcons.camera,
+                                    size: 50,
+                                  ),
                                 ),
                               ),
                             ),
@@ -122,102 +127,74 @@ class _DetailEditPageState extends State<DetailEditPage> {
                     height: 20,
                   ),
                   TextFormField(
-                    initialValue: _name,
+                    initialValue: widget.store.name,
+                    onSaved: (value) => AuthAPI.cInfo!.name = value ?? '',
+                    validator: (value) => value != null && value.isNotEmpty
+                        ? null
+                        : 'Required field',
                     decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.normal),
-                        floatingLabelStyle: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                        fillColor: Colors.black,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        labelText: 'Store Name'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _name = value;
-                      });
-                    },
+                      labelText: 'Store name',
+                      hintText: 'Enter store name',
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      labelStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   TextFormField(
-                    initialValue: _email,
-                    decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.normal),
-                        floatingLabelStyle: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                        fillColor: Colors.black,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        hintText: 'Enter your email'),
+                    initialValue: widget.store.email,
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (value) => AuthAPI.cInfo!.email = value ?? '',
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your email';
                       } else if (!value.contains('@')) {
                         return 'Please enter a valid email';
                       }
                       return null;
                     },
-                    onChanged: (value) {
-                      setState(() {
-                        _email = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    initialValue: _phoneNumber,
                     decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.normal),
-                        floatingLabelStyle: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                        fillColor: Colors.black,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        hintText: 'Enter your phone number'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your phone number';
-                      } else if (value.length != 10) {
-                        return 'Please enter a valid phone number';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _phoneNumber = value;
-                      });
-                    },
+                      labelText: 'Email',
+                      hintText: 'Enter your email',
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      labelStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      suffixIcon: Icon(Icons.email),
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    maxLines: 1,
+                    textInputAction: TextInputAction.done,
                   ),
                   const SizedBox(height: 32),
                   SizedBox(
@@ -235,11 +212,14 @@ class _DetailEditPageState extends State<DetailEditPage> {
                       color: Colors.black,
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                              BorderRadius.all(Radius.circular(16.0))),
+                              BorderRadius.all(Radius.circular(10.0))),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          Navigator.pop(context);
-                        }
+                                        _formKey.currentState!.save();
+                                        AuthAPI.updateStoreData().then((value) {
+                                          CustomDialog.showSnackBar(context, "Update Succesfully");
+                                        });
+                                      }
                       },
                     ),
                   ),
@@ -250,5 +230,81 @@ class _DetailEditPageState extends State<DetailEditPage> {
         ),
       ),
     );
+  }
+
+  // Show Bottom Shit for uploding profile pic .
+  void _showBottomShit() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        builder: (context) {
+          return ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(top: 30, bottom: 60),
+            children: [
+              Text(
+                "Pick Profile Pictures ",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        // Pick an image
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.gallery, imageQuality: 80);
+
+                        if (image != null) {
+                          print("Image Path : ${image.path}");
+                          //update image
+                          setState(() {
+                            _image = image.path;
+                          });
+                          AuthAPI.uploadProfilePicture(File(_image!));
+                          //for hide bottom sheet
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          backgroundColor: Colors.white,
+                          fixedSize: Size(80, 80)),
+                      child: Image.asset('assets/images/picture.png')),
+                  ElevatedButton(
+                      onPressed: () async {
+                        final ImagePicker picker = ImagePicker();
+                        // Pick an image
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera, imageQuality: 80);
+
+                        if (image != null) {
+                          print("Image Path : ${image.path}");
+                          //update image
+                          setState(() {
+                            _image = image.path;
+                          });
+                          AuthAPI.uploadProfilePicture(File(_image!));
+                          //for hide bottom sheet
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          backgroundColor: Colors.white,
+                          fixedSize: Size(80, 80)),
+                      child: Image.asset('assets/images/camera.png')),
+                ],
+              )
+            ],
+          );
+        });
   }
 }

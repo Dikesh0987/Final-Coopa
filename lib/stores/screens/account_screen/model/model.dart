@@ -1,6 +1,8 @@
+import 'package:coopa/stores/model/store_model.dart';
 import 'package:coopa/stores/screens/edit_account_details_screen/edit_account_details_screen.dart';
 import 'package:coopa/stores/screens/get_in_touch_screen/get_in_touch_screen.dart';
 import 'package:coopa/stores/screens/help_center_screen/help_center_screen.dart';
+import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,27 +20,41 @@ class Setting {
   });
 }
 
+final Store? store = AuthAPI.cInfo;
+
 final List<Setting> settings = [
   Setting(
       title: "Personal Data",
       route: "/edit_account",
       icon: CupertinoIcons.person_fill,
-      ontap: MaterialPageRoute(builder: (context) => DetailEditPage())),
+      ontap: MaterialPageRoute(
+          builder: (context) => DetailEditPage(
+                store: store!,
+              ))),
   Setting(
       title: "Settings",
       route: "/",
       icon: Icons.settings,
-      ontap: MaterialPageRoute(builder: (_) => DetailEditPage())),
+      ontap: MaterialPageRoute(
+          builder: (context) => DetailEditPage(
+                store: store!,
+              ))),
   Setting(
       title: "E-Statements",
       route: "/",
       icon: CupertinoIcons.doc_fill,
-      ontap: MaterialPageRoute(builder: (_) => DetailEditPage())),
+      ontap: MaterialPageRoute(
+          builder: (context) => DetailEditPage(
+                store: store!,
+              ))),
   Setting(
       title: "Refferal Code",
       route: "/",
       icon: CupertinoIcons.heart_fill,
-      ontap: MaterialPageRoute(builder: (_) => DetailEditPage())),
+      ontap: MaterialPageRoute(
+          builder: (context) => DetailEditPage(
+                store: store!,
+              ))),
 ];
 
 final List<Setting> settings2 = [
@@ -56,10 +72,8 @@ final List<Setting> settings2 = [
       title: "Community",
       route: "/",
       icon: CupertinoIcons.person_3_fill,
-      ontap: MaterialPageRoute(builder: (_) => DetailEditPage())),
-  Setting(
-      title: "Log Out",
-      route: "/",
-      icon: CupertinoIcons.person_3_fill,
-      ontap: MaterialPageRoute(builder: (_) => DetailEditPage())),
+      ontap: MaterialPageRoute(
+          builder: (context) => DetailEditPage(
+                store: store!,
+              ))),
 ];

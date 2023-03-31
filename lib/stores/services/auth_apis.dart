@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 
 // A class for handling authentication and store related functions
 class AuthAPI {
-  static final auth = FirebaseAuth.instance; // Firebase authentication instance
+  static late final auth =
+      FirebaseAuth.instance; // Firebase authentication instance
   static final firestore =
       FirebaseFirestore.instance; // Firebase Firestore instance
   static final storage = FirebaseStorage.instance; // Firebase Storage instance
@@ -117,5 +118,29 @@ class AuthAPI {
         .collection('stores')
         .doc(cstore.uid)
         .update({'images': cInfo!.images});
+  }
+
+  // Update store data
+
+  static Future<void> updateStoreData() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      // Handle the case where there is no current user
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .update({
+        'name': cInfo!.name as String,
+        'about': cInfo!.about as String,
+      });
+    } catch (e) {
+      // Handle the error gracefully
+      print('Failed to update user info: $e');
+    }
   }
 }

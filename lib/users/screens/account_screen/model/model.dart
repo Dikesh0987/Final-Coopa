@@ -1,6 +1,6 @@
-import 'package:coopa/stores/screens/edit_account_details_screen/edit_account_details_screen.dart';
-import 'package:coopa/stores/screens/get_in_touch_screen/get_in_touch_screen.dart';
-import 'package:coopa/stores/screens/help_center_screen/help_center_screen.dart';
+import 'package:coopa/users/screens/edit_account_details_screen/edit_account_details_screen.dart';
+import 'package:coopa/users/screens/get_in_touch_screen/get_in_touch_screen.dart';
+import 'package:coopa/users/screens/help_center_screen/help_center_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
