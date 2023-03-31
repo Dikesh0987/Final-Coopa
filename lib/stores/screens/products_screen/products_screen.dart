@@ -1,4 +1,10 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/stores/screens/edit_product_screen/edit_product_screen.dart';
+import 'package:coopa/stores/services/auth_apis.dart';
+import 'package:coopa/stores/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -19,14 +25,17 @@ class _ProductScreenState extends State<ProductScreen> {
   // for add new products bottom shit
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late String _productName;
-  late double _productPrice;
-  late int _productQuantity;
-  late double _productDiscountedPrice;
-  late String _productDescription;
+  late String _productName,
+      _productPrice,
+      _productQuantity,
+      _productDiscountedPrice,
+      _productDescription;
 
   // for image file
   String? _image;
+
+  // List Of products
+  List<Product> _list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +75,44 @@ class _ProductScreenState extends State<ProductScreen> {
               SizedBox(
                 height: 10,
               ),
-              _productCard(),
-              _productCard(),
-              _productCard(),
-              _productCard(),
-              _productCard(),
-              _productCard(),
-              _productCard(),
+              StreamBuilder(
+                stream: AuthAPI.getAllProducts(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    // if data has been loading
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      return Center(child: CircularProgressIndicator());
+
+                    // data lodede
+
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      final data = snapshot.data?.docs;
+                      _list = data
+                              ?.map((e) => Product.fromJson(e.data()))
+                              .toList() ??
+                          [];
+
+                      if (_list.isNotEmpty) {
+                        return ListView.builder(
+                            itemCount: _list.length,
+                            padding: EdgeInsets.only(top: 5),
+                            physics: BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Text(_list[index].title);
+                            });
+                      } else {
+                        return Center(
+                          child: Text(
+                            "Currently has no products",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        );
+                      }
+                  }
+                },
+              ),
               SizedBox(
                 height: 10,
               )
@@ -374,7 +414,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  _productPrice = double.parse(value!);
+                                  _productPrice = value!;
                                 },
                               ),
                               SizedBox(height: 20),
@@ -406,7 +446,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  _productQuantity = int.parse(value!);
+                                  _productQuantity = value!;
                                 },
                               ),
                               SizedBox(height: 20),
@@ -433,8 +473,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 ),
                                 onSaved: (value) {
                                   if (value!.isNotEmpty) {
-                                    _productDiscountedPrice =
-                                        double.parse(value);
+                                    _productDiscountedPrice = value;
                                   } else {
                                     // _productDiscountedPrice = null;
                                   }
@@ -492,7 +531,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
-
+                                      AuthAPI.addNewProduct(
+                                              _productName,
+                                              _productName,
+                                              _productDiscountedPrice,
+                                              _productQuantity,
+                                              _productQuantity,
+                                              File(_image!))
+                                          .then((value) => null);
                                       // TODO: Implement saving product to database
 
                                       Navigator.pop(context);

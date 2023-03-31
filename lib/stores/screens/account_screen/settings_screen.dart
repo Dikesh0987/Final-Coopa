@@ -117,7 +117,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Icon(
-                          FontAwesomeIcons.smoking,
+                          FontAwesomeIcons.arrowRightFromBracket,
                           color: Colors.black54,
                         ),
                       ),

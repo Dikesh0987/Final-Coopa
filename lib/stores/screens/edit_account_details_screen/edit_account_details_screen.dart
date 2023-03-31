@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:coopa/stores/helper/dailogs.dart';
 import 'package:coopa/stores/model/store_model.dart';
+import 'package:coopa/stores/screens/account_screen/model/model.dart';
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,12 @@ class DetailEditPage extends StatefulWidget {
 }
 
 class _DetailEditPageState extends State<DetailEditPage> {
+  // Text editing controller for textfiled's
+
+  // final _nameTextEditingController = TextEditingController();
+  // final _emailTextEditingController = TextEditingController();
+
+  // Globel Form Key
   final _formKey = GlobalKey<FormState>();
   String? _image;
 
@@ -127,6 +134,7 @@ class _DetailEditPageState extends State<DetailEditPage> {
                     height: 20,
                   ),
                   TextFormField(
+                    // controller: _nameTextEditingController,
                     initialValue: widget.store.name,
                     onSaved: (value) => AuthAPI.cInfo!.name = value ?? '',
                     validator: (value) => value != null && value.isNotEmpty
@@ -158,20 +166,18 @@ class _DetailEditPageState extends State<DetailEditPage> {
                   ),
                   SizedBox(height: 20),
                   TextFormField(
-                    initialValue: widget.store.email,
-                    keyboardType: TextInputType.emailAddress,
-                    onSaved: (value) => AuthAPI.cInfo!.email = value ?? '',
+                    // controller: _emailTextEditingController,
+                    initialValue: widget.store.about,
+                    onSaved: (value) => AuthAPI.cInfo!.about = value ?? '',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      } else if (!value.contains('@')) {
-                        return 'Please enter a valid email';
+                        return 'Please enter something';
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                      labelText: 'Email',
-                      hintText: 'Enter your email',
+                      labelText: 'Aboout',
+                      hintText: 'Some Details about shop',
                       hintStyle: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
@@ -215,11 +221,13 @@ class _DetailEditPageState extends State<DetailEditPage> {
                               BorderRadius.all(Radius.circular(10.0))),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                                        _formKey.currentState!.save();
-                                        AuthAPI.updateStoreData().then((value) {
-                                          CustomDialog.showSnackBar(context, "Update Succesfully");
-                                        });
-                                      }
+                          _formKey.currentState!.save();
+                          AuthAPI.updateStoreData(store!.name, store!.about)
+                              .then((value) {
+                            CustomDialog.showSnackBar(
+                                context, "Update Succesfully");
+                          });
+                        }
                       },
                     ),
                   ),

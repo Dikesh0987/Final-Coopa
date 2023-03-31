@@ -1,12 +1,11 @@
 // Importing required packages
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/stores/model/store_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 
 // A class for handling authentication and store related functions
 class AuthAPI {
@@ -122,7 +121,7 @@ class AuthAPI {
 
   // Update store data
 
-  static Future<void> updateStoreData() async {
+  static Future<void> updateStoreData(String name, about) async {
     final currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser == null) {
@@ -132,15 +131,85 @@ class AuthAPI {
 
     try {
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection('stores')
           .doc(currentUser.uid)
           .update({
-        'name': cInfo!.name as String,
-        'about': cInfo!.about as String,
+        'name': name,
+        'about': about,
       });
     } catch (e) {
       // Handle the error gracefully
-      print('Failed to update user info: $e');
+      print('Failed to update store info: $e');
     }
+  }
+
+  /// ++++++ For products based API'S ++++++ ///
+  ///
+
+  static Product? pInfo;
+
+  static Future<void> addNewProduct(String title, price, discount, quantity,
+      description, File imagefile) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    final pId = new DateTime.now().millisecondsSinceEpoch;
+    final product = Product(
+        uniqueId: cstore.uid,
+        title: title,
+        price: price,
+        image: '',
+        discount: discount,
+        isAvailable: true,
+        registerAt: time,
+        quantity: quantity,
+        modifyAt: time,
+        description: description);
+
+    await firestore
+        .collection('inventory')
+        .doc(cstore.uid)
+        .collection('products')
+        .doc(time)
+        .set(product.toJson()); // Add the new store to Firestore database
+
+    final ext = imagefile.path.split('.').last;
+
+    final ref =
+        storage.ref().child('products_images/${cstore.uid}/${pId}.$ext');
+
+    // Upload the file to Firebase Storage
+    final snapshot = await ref.putFile(
+        imagefile, SettableMetadata(contentType: 'image/$ext'));
+
+    // Update the "images" field of the current store in Firestore with the download URL of the uploaded image
+    final storageImageUrl = await snapshot.ref.getDownloadURL();
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('inventory')
+          .doc(cstore.uid)
+          .collection('products')
+          .doc(time)
+          .update({
+        'image': storageImageUrl,
+      });
+    } catch (e) {
+      // Handle the error gracefully
+      print('Failed to update store image: $e');
+    }
+  }
+
+  // For geting all products
+  static final prostream = FirebaseFirestore.instance
+      .collection('inventory')
+      .doc(cstore.uid)
+      .collection('products')
+      .snapshots();
+      
+   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() {
+    return AuthAPI.firestore
+        .collection('inventory')
+      .doc(cstore.uid)
+      .collection('products')
+      .snapshots();
   }
 }
