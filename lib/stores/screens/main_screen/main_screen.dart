@@ -34,8 +34,8 @@ class _MainScreenState extends State<MainScreen> {
   // Define the list of screens to display in the bottom navigation bar
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    DashboardScreen(),
-    ProductScreen(),
+    DashboardScreen(store: AuthAPI.cInfo!,),
+    ProductScreen(store: AuthAPI.cInfo!,),
     PeopleScreen(),
     AccountScreen(
       store: AuthAPI.cInfo!,

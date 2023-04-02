@@ -1,13 +1,16 @@
+import 'package:coopa/users/model/user_model.dart';
 import 'package:coopa/users/screens/account_screen/constants/constants.dart';
 import 'package:coopa/users/screens/account_screen/model/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingTile extends StatelessWidget {
+  final UserModel? user;
   final Setting setting;
   const SettingTile({
     super.key,
     required this.setting,
+    required this.user,
   });
 
   @override

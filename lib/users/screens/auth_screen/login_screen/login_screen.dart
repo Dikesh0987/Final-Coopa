@@ -1,8 +1,15 @@
+import 'dart:io';
+
+import 'package:coopa/users/helper/dailogs.dart';
+import 'package:coopa/users/screens/auth_screen/account_setup_screen/account_setup_screen.dart';
 import 'package:coopa/users/screens/auth_screen/login_screen/password_screen.dart';
 import 'package:coopa/users/screens/main_screen/main_screen.dart';
+import 'package:coopa/users/services/apis.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:coopa/theme/style.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +19,67 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  /// Handel google btn
+  _handleGoogleBtnClick() async {
+    // catcj internet/wifi connection issue
+    try {
+      //checking internet connections ....
+      await InternetAddress.lookup('google.com');
+
+      // progress indicator ....
+      CustomDialog.showProgressDialog(context);
+
+      // Call google sign in function ....
+      _signInWithGoogle().then((user) async {
+        if (user != null) {
+          // Get user Data from googlr
+          print('\nUser : ${user.user}');
+          print('\nUserAdditionalInfo : ${user.additionalUserInfo}');
+
+          // Stop progress indicator
+          Navigator.pop(context);
+
+          if ((await APIs.userExists())) {
+            //Redirect In Home page after succes fully Login
+            APIs.getCurrentUserInfo().then((value) => APIs.updateActiveStatus(
+                    true)
+                .then((value) => Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => MainScreen()))
+                    .then((value) => Navigator.pop(context))));
+          } else {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => AccountSetupScreen()));
+          }
+        }
+      });
+    } catch (e) {
+      print("_signInWithGoogle : $e");
+
+      // Show no internrt connections msg in snackbar ....
+      CustomDialog.showSnackBar(context, "No Internet/wifi Connection !");
+      return null;
+    }
+  }
+
+  // For Google Sign Oprations...
+  Future<UserCredential?> _signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await APIs.auth.signInWithCredential(credential);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,8 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 45,
               minWidth: double.infinity,
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MainScreen()));
+              _handleGoogleBtnClick();
               },
               color: Colors.white,
               child: Text(

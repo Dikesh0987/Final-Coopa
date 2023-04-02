@@ -21,7 +21,7 @@ void main() async {
       await Firebase.initializeApp();
     } catch (e) {
       // Handle error
-      print('Failed to initialize Firebase: $e');
+      // print('Failed to initialize Firebase: $e');
     }
 
     runApp(const MyApp());

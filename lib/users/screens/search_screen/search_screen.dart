@@ -1,5 +1,7 @@
+import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:coopa/users/screens/notification_screen/notification_screen.dart';
+import 'package:coopa/users/services/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -89,6 +91,48 @@ class _SearchScreenState extends State<SearchScreen> {
                   listItem('assets/images/dm1.jpg', 'Tom', false),
                 ],
               ),
+            ),
+            StreamBuilder(
+              stream: APIs.getAllProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.connectionState == ConnectionState.none) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      "Error loading data",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  final storeList = snapshot.data!.docs
+                      .map((e) => Product.fromJson(e.data()))
+                      .toList();
+
+                  if (storeList.isNotEmpty) {
+                    return ListView.builder(
+                      itemCount: storeList.length,
+                      padding: EdgeInsets.only(top: 5),
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Text("data");
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: Text(
+                        "No Products found",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }
+                } else {
+                  return Container();
+                }
+              },
             ),
             SizedBox(height: 15.0),
             firstStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',

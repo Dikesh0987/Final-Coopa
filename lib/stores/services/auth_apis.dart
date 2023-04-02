@@ -1,11 +1,20 @@
 // Importing required packages
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coopa/stores/model/location_model.dart';
 import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/stores/model/store_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 // A class for handling authentication and store related functions
 class AuthAPI {
@@ -41,7 +50,7 @@ class AuthAPI {
       isOnline: true,
       pushToken: '',
       email: cstore.email.toString(),
-      location: 'location',
+      // location: 'location',
     );
 
     await firestore
@@ -78,7 +87,13 @@ class AuthAPI {
   }
 
   // Set up the new store with given store name and password
-  static Future<void> setupStore(String name, String password) async {
+  static Future<void> setupStore(
+    String name,
+    String password,
+    String currentAddress,
+    double latitude,
+    double longitude,
+  ) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final store = Store(
@@ -92,13 +107,24 @@ class AuthAPI {
       isOnline: true,
       pushToken: '',
       email: cstore.email.toString(),
-      location: 'location',
+      // location: 'location',
     );
+
     // Set the store data in Firestore
     await firestore.collection('stores').doc(cstore.uid).set(store.toJson());
 
     // Set the "cInfo" variable to the created store object
     cInfo = store;
+
+    final geolocation = GeoLocation(
+        latitude: latitude, longitude: longitude, address: currentAddress);
+
+    await firestore
+        .collection('stores')
+        .doc(cstore.uid)
+        .collection('location')
+        .doc('geoLocation')
+        .set(geolocation.toJson());
   }
 
 // This function uploads a profile picture for the current store to Firebase Storage
@@ -199,17 +225,122 @@ class AuthAPI {
   }
 
   // For geting all products
-  static final prostream = FirebaseFirestore.instance
-      .collection('inventory')
-      .doc(cstore.uid)
-      .collection('products')
-      .snapshots();
-      
-   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts(
+      String sId) {
     return AuthAPI.firestore
         .collection('inventory')
-      .doc(cstore.uid)
-      .collection('products')
-      .snapshots();
+        .doc('${cstore.uid.toString()}')
+        .collection('products')
+        .snapshots();
+  }
+
+  //  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() {
+  //   return AuthAPI.firestore
+  //       .collection('inventory')
+  //     .doc(cstore.uid)
+  //     .collection('products')
+  //     .snapshots();
+  // }
+
+  // update product details
+  static Future<void> updateProductData(String title, price, quantity, discount,
+      description, ragisterAtid) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      // Handle the case where there is no current user
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('inventory')
+          .doc('${cstore.uid.toString()}')
+          .collection('products')
+          .doc(ragisterAtid)
+          .update({
+        'title': title,
+        'price': price,
+        'quantity': quantity,
+        'discount': discount,
+        'description': description,
+      });
+    } catch (e) {
+      // Handle the error gracefully
+      print('Failed to update product info: $e');
+    }
+  }
+
+  // update avalabilty
+  static Future<void> productAvailability(Product product, bool status) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      // Handle the case where there is no current user
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('inventory')
+          .doc('${cstore.uid.toString()}')
+          .collection('products')
+          .doc(product.registerAt)
+          .update({
+        'isAvailable': status,
+      });
+    } catch (e) {
+      // Handle the error gracefully
+      print('Failed to update product status: $e');
+    }
+  }
+
+  // delete product
+  static Future<void> deleteProduct(Product product) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      // Handle the case where there is no current user
+      return;
+    }
+
+    try {
+      // Delete the product document from Firestore
+      await FirebaseFirestore.instance
+          .collection('inventory')
+          .doc(cstore.uid)
+          .collection('products')
+          .doc(product.registerAt)
+          .delete();
+
+      // Delete the image file from Cloud Storage
+      await FirebaseStorage.instance.refFromURL(product.image).delete();
+    } catch (e) {
+      // Handle the error gracefully
+      print('Failed to delete product: $e');
+    }
+  }
+
+  /// for store status online or offline
+  // update avalabilty
+  static Future<void> storeStatus(Store store, bool status) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      // Handle the case where there is no current user
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('store')
+          .doc('${cstore.uid.toString()}')
+          .update({
+        'isOnline': status,
+      });
+    } catch (e) {
+      // Handle the error gracefully
+      print('Failed to update store status: $e');
+    }
   }
 }

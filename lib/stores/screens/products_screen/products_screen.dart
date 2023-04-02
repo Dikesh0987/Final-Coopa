@@ -1,26 +1,27 @@
 import 'dart:io';
-
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coopa/stores/model/product_model.dart';
-import 'package:coopa/stores/screens/edit_product_screen/edit_product_screen.dart';
+import 'package:coopa/stores/model/store_model.dart';
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:coopa/stores/widgets/product_card.dart';
+import 'package:coopa/stores/widgets/test.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../theme/style.dart';
-import 'package:share/share.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+  const ProductScreen({Key? key, required this.store}) : super(key: key);
+
+  final Store? store;
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  bool _tvalue = true;
+  final bool _tvalue = true;
 
   // for add new products bottom shit
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -35,7 +36,7 @@ class _ProductScreenState extends State<ProductScreen> {
   String? _image;
 
   // List Of products
-  List<Product> _list = [];
+  List<Product> productList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -63,214 +64,49 @@ class _ProductScreenState extends State<ProductScreen> {
               ))
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 6,
-                color: sparatorColor,
+      body: StreamBuilder(
+        stream: AuthAPI.getAllProducts(widget.store!.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.connectionState == ConnectionState.none) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Error loading data",
+                style: TextStyle(fontSize: 20),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              StreamBuilder(
-                stream: AuthAPI.getAllProducts(),
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    // if data has been loading
-                    case ConnectionState.waiting:
-                    case ConnectionState.none:
-                      return Center(child: CircularProgressIndicator());
+            );
+          } else if (snapshot.hasData) {
+            final productList = snapshot.data!.docs
+                .map((e) => Product.fromJson(e.data()))
+                .toList();
 
-                    // data lodede
-
-                    case ConnectionState.active:
-                    case ConnectionState.done:
-                      final data = snapshot.data?.docs;
-                      _list = data
-                              ?.map((e) => Product.fromJson(e.data()))
-                              .toList() ??
-                          [];
-
-                      if (_list.isNotEmpty) {
-                        return ListView.builder(
-                            itemCount: _list.length,
-                            padding: EdgeInsets.only(top: 5),
-                            physics: BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return Text(_list[index].title);
-                            });
-                      } else {
-                        return Center(
-                          child: Text(
-                            "Currently has no products",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        );
-                      }
-                  }
+            if (productList.isNotEmpty) {
+              return ListView.builder(
+                itemCount: productList.length,
+                padding: EdgeInsets.only(top: 5),
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return ProductCard(
+                    product: productList[index],
+                  );
                 },
-              ),
-              SizedBox(
-                height: 10,
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding _productCard() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: InkWell(
-        onTap: () {
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => EditProductScreen()));
-
-          // for add product view data
+              );
+            } else {
+              return Center(
+                child: Text(
+                  "No products found",
+                  style: TextStyle(fontSize: 20),
+                ),
+              );
+            }
+          } else {
+            return Container();
+          }
         },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: Colors.white),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Dikesh kumar netam",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          PopupMenuButton(
-                            padding: EdgeInsets.all(0),
-                            position: PopupMenuPosition.under,
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  value: 'edit',
-                                  child: Text(
-                                    'Edit',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: 'delete',
-                                  child: Text(
-                                    'Delete',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: 'share',
-                                  child: Text(
-                                    'Share',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                )
-                              ];
-                            },
-                            onSelected: (value) {
-                              // Handle the selected menu item here
-                              switch (value) {
-                                case 'edit':
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditProductScreen()));
-                                  break;
-                                case 'delete':
-                                  // Handle the Delete action
-                                  break;
-                                case 'share':
-                                  context.findRenderObject();
-                                  Share.share(
-                                      'Check out this cool Flutter app!');
-                                  break;
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "7 pices",
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        "₹50",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "In stock",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          FlutterSwitch(
-                            height: 20.0,
-                            width: 40.0,
-                            padding: 4.0,
-                            toggleSize: 15.0,
-                            borderRadius: 10.0,
-                            activeColor: Colors.lightBlue,
-                            value: _tvalue,
-                            onToggle: (value) {
-                              setState(() {
-                                _tvalue = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -352,6 +188,29 @@ class _ProductScreenState extends State<ProductScreen> {
                                   SizedBox(
                                     width: 20,
                                   ),
+                                  if (_image != null)
+                                    Container(
+                                      height: 120,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.file(
+                                          File(_image!),
+                                          width: 60,
+                                          height: 60,
+
+                                          fit: BoxFit.fill,
+                                          // placeholder: (context, url) => CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                               SizedBox(height: 20),
@@ -533,10 +392,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                       _formKey.currentState!.save();
                                       AuthAPI.addNewProduct(
                                               _productName,
-                                              _productName,
+                                              _productPrice,
                                               _productDiscountedPrice,
                                               _productQuantity,
-                                              _productQuantity,
+                                              _productDescription,
                                               File(_image!))
                                           .then((value) => null);
                                       // TODO: Implement saving product to database
@@ -625,36 +484,5 @@ class _ProductScreenState extends State<ProductScreen> {
             ],
           );
         });
-  }
-}
-
-class MyMenuButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      itemBuilder: (BuildContext context) {
-        return <PopupMenuEntry<String>>[
-          PopupMenuItem<String>(
-            value: 'Option 1',
-            child: Text('Option 1'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Option 2',
-            child: Text('Option 2'),
-          ),
-          PopupMenuItem<String>(
-            value: 'Option 3',
-            child: Text('Option 3'),
-          ),
-        ];
-      },
-      onSelected: (String value) {
-        // Do something when an option is selected
-      },
-      child: IconButton(
-        icon: Icon(Icons.more_vert),
-        onPressed: () {},
-      ),
-    );
   }
 }

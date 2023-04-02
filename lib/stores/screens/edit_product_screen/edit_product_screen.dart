@@ -1,3 +1,6 @@
+import 'package:coopa/stores/helper/dailogs.dart';
+import 'package:coopa/stores/model/product_model.dart';
+import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -7,8 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../../theme/style.dart';
 
 class EditProductScreen extends StatefulWidget {
-  const EditProductScreen({super.key});
-
+  const EditProductScreen({super.key, required this.product});
+  final Product product;
   @override
   State<EditProductScreen> createState() => _EditProductScreenState();
 }
@@ -19,9 +22,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   // form
   late String _productName;
-  late double _productPrice;
-  late int _productQuantity;
-  late double _productDiscountedPrice;
+  late String _productPrice;
+  late String _productQuantity;
+  late String _productDiscountedPrice;
   late String _productDescription;
 
   // for image file
@@ -106,6 +109,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               labelText: 'Product Name'),
+                          initialValue: widget.product.title,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter product name';
@@ -135,6 +139,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               labelText: 'Product Price'),
+                          initialValue: widget.product.price,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter product price';
@@ -142,7 +147,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             return null;
                           },
                           onSaved: (value) {
-                            _productPrice = double.parse(value!);
+                            _productPrice = value!;
                           },
                         ),
                         SizedBox(height: 20),
@@ -164,6 +169,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               labelText: 'Product Avalibel Quantity'),
+                          initialValue: widget.product.quantity,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter product quantity';
@@ -171,7 +177,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             return null;
                           },
                           onSaved: (value) {
-                            _productQuantity = int.parse(value!);
+                            _productQuantity = value!;
                           },
                         ),
                         SizedBox(height: 20),
@@ -194,9 +200,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             labelText: 'Product Discounted Price (Optional)',
                           ),
+                          initialValue: widget.product.discount,
                           onSaved: (value) {
                             if (value!.isNotEmpty) {
-                              _productDiscountedPrice = double.parse(value);
+                              _productDiscountedPrice = value;
                             } else {
                               // _productDiscountedPrice = null;
                             }
@@ -221,6 +228,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               labelText: 'Product Description'),
+                          initialValue: widget.product.description,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter product description';
@@ -251,10 +259,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-
-                                // TODO: Implement saving product to database
-
-                                Navigator.pop(context);
+                                AuthAPI.updateProductData(
+                                        _productName,
+                                        _productPrice,
+                                        _productQuantity,
+                                        _productDiscountedPrice,
+                                        _productDescription,
+                                        widget.product.registerAt)
+                                    .then((value) {
+                                  CustomDialog.showSnackBar(
+                                      context, "Update Succesfully");
+                                });
                               }
                             },
                           ),

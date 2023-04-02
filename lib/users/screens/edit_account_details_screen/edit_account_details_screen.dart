@@ -1,9 +1,15 @@
 import 'package:coopa/theme/style.dart';
+import 'package:coopa/users/helper/dailogs.dart';
+import 'package:coopa/users/model/user_model.dart';
+import 'package:coopa/users/screens/account_screen/model/model.dart';
+import 'package:coopa/users/services/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DetailEditPage extends StatefulWidget {
-  const DetailEditPage({Key? key}) : super(key: key);
+  const DetailEditPage({Key? key, required this.user}) : super(key: key);
+
+  final UserModel user;
 
   @override
   _DetailEditPageState createState() => _DetailEditPageState();
@@ -11,10 +17,6 @@ class DetailEditPage extends StatefulWidget {
 
 class _DetailEditPageState extends State<DetailEditPage> {
   final _formKey = GlobalKey<FormState>();
-
-  String _name = '';
-  String _email = '';
-  String _phoneNumber = '';
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +124,11 @@ class _DetailEditPageState extends State<DetailEditPage> {
                     height: 20,
                   ),
                   TextFormField(
-                    initialValue: _name,
+                    initialValue: widget.user.name,
+                    onSaved: (value) => APIs.uInfo!.name = value ?? '',
+                    validator: (value) => value != null && value.isNotEmpty
+                        ? null
+                        : 'Required field',
                     decoration: InputDecoration(
                         labelStyle: TextStyle(
                             fontSize: 16,
@@ -139,23 +145,16 @@ class _DetailEditPageState extends State<DetailEditPage> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
                         labelText: 'Full Name'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _name = value;
-                      });
-                    },
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextFormField(
-                    initialValue: _email,
+                    initialValue: widget.user.about,
+                    onSaved: (value) => APIs.uInfo!.about = value ?? '',
+                    validator: (value) => value != null && value.isNotEmpty
+                        ? null
+                        : 'Required field',
                     decoration: InputDecoration(
                         labelStyle: TextStyle(
                             fontSize: 16,
@@ -171,53 +170,7 @@ class _DetailEditPageState extends State<DetailEditPage> {
                             borderRadius: BorderRadius.circular(10)),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
-                        hintText: 'Enter your email'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your email';
-                      } else if (!value.contains('@')) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _email = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    initialValue: _phoneNumber,
-                    decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.normal),
-                        floatingLabelStyle: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                        fillColor: Colors.black,
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(10)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        hintText: 'Enter your phone number'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your phone number';
-                      } else if (value.length != 10) {
-                        return 'Please enter a valid phone number';
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _phoneNumber = value;
-                      });
-                    },
+                        hintText: 'Enter your about'),
                   ),
                   const SizedBox(height: 32),
                   SizedBox(
@@ -238,7 +191,12 @@ class _DetailEditPageState extends State<DetailEditPage> {
                               BorderRadius.all(Radius.circular(16.0))),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          Navigator.pop(context);
+                          _formKey.currentState!.save();
+                          APIs.updateUserData(user!.name, user!.about)
+                              .then((value) {
+                            CustomDialog.showSnackBar(
+                                context, "Update Succesfully");
+                          });
                         }
                       },
                     ),

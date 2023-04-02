@@ -1,4 +1,5 @@
 import 'package:coopa/stores/screens/store_welcome_screen/store_welcome_screen.dart';
+import 'package:coopa/stores/test.dart';
 import 'package:coopa/users/screens/users_welcome_screen%20copy%203/users_welcome_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -38,6 +39,14 @@ class Welcome extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (_) => UsersWelcomeScreen()));
+              },
+            ),
+            SizedBox(height: 32.0),
+            ElevatedButton(
+              child: Text('Get Started'),
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => Home()));
               },
             ),
           ],

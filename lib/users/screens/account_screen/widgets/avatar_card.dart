@@ -1,44 +1,101 @@
-import 'package:coopa/users/screens/account_screen/constants/constants.dart';
+import 'package:coopa/stores/model/store_model.dart';
+import 'package:coopa/stores/screens/account_screen/constants/constants.dart';
+import 'package:coopa/stores/screens/edit_account_details_screen/edit_account_details_screen.dart';
+import 'package:coopa/stores/services/auth_apis.dart';
+import 'package:coopa/users/model/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
-class AvatarCard extends StatelessWidget {
-  const AvatarCard({
-    super.key,
-  });
+class AvatarCard extends StatefulWidget {
+  const AvatarCard({Key? key, required this.user}) : super(key: key);
+
+  final UserModel user;
 
   @override
+  State<AvatarCard> createState() => _AvatarCardState();
+}
+
+class _AvatarCardState extends State<AvatarCard> {
+  @override
   Widget build(BuildContext context) {
+    bool _tvalue = widget.user.isOnline;
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Image.asset(
-              "assets/images/camera.png",
-              width: 60,
-              height: 60,
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(
+                      widget.user.images,
+                    ),
+                    fit: BoxFit.cover),
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Uranus Code",
+                Text(
+                  widget.user.name,
                   style: TextStyle(
-                    fontSize: kbigFontSize,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: kprimaryColor,
                   ),
                 ),
+                const SizedBox(height: 4),
                 Text(
-                  "Youtube Channel",
+                  widget.user.about,
                   style: TextStyle(
                     fontSize: ksmallFontSize,
                     color: Colors.grey.shade600,
                   ),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Text(
+                      "Online/Offline",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(width: 15),
+                    FlutterSwitch(
+                      height: 20.0,
+                      width: 40.0,
+                      padding: 4.0,
+                      toggleSize: 15.0,
+                      borderRadius: 10.0,
+                      activeColor: Colors.lightBlue,
+                      value: _tvalue,
+                      onToggle: (value) {
+                        setState(() {
+                          _tvalue = value;
+                        });
+                        // AuthAPI.storeStatus(widget.user, _tvalue);
+                      },
+                    ),
+                  ],
                 )
               ],
             )

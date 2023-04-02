@@ -3,6 +3,7 @@ import 'package:coopa/users/screens/home_screen/home_screen.dart';
 import 'package:coopa/users/screens/account_screen/settings_screen.dart';
 import 'package:coopa/users/screens/offers_screen/offers_screen.dart';
 import 'package:coopa/users/screens/search_screen/search_screen.dart';
+import 'package:coopa/users/services/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -14,14 +15,26 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  // Initialize the state
+  @override
+  void initState() {
+    super.initState();
+    // Call the function to initialize all store data
+    APIs.getCurrentUserInfo();
+    // TODO: Call function to initialize store data
+  }
+
+  // Define the current index of the bottom navigation bar
   int _currentIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+    HomeScreen(user: APIs.uInfo!,),
     FeedScreen(),
     SearchScreen(),
     // OffersScreen(),
-    AccountScreen(),
+    AccountScreen(
+      user: APIs.uInfo!,
+    ),
   ];
 
   void _onItemTapped(int index) {

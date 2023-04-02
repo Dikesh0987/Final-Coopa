@@ -1,5 +1,6 @@
 import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/stores/screens/edit_product_screen/edit_product_screen.dart';
+import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -15,9 +16,9 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-   bool _tvalue = true;
   @override
   Widget build(BuildContext context) {
+    bool _tvalue = widget.product.isAvailable;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: InkWell(
@@ -39,6 +40,9 @@ class _ProductCardState extends State<ProductCard> {
                   height: 110,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                          image: NetworkImage(widget.product.image),
+                          fit: BoxFit.cover),
                       color: Colors.grey),
                 ),
                 SizedBox(
@@ -52,7 +56,7 @@ class _ProductCardState extends State<ProductCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Dikesh kumar netam",
+                            widget.product.title,
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -97,15 +101,16 @@ class _ProductCardState extends State<ProductCard> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              EditProductScreen()));
+                                              EditProductScreen(
+                                                product: widget.product,
+                                              )));
                                   break;
                                 case 'delete':
-                                  // Handle the Delete action
+                                  AuthAPI.deleteProduct(widget.product);
                                   break;
                                 case 'share':
                                   context.findRenderObject();
-                                  Share.share(
-                                      'Check out this cool Flutter app!');
+                                  Share.share("Coopa: ${widget.product.title}");
                                   break;
                               }
                             },
@@ -113,7 +118,7 @@ class _ProductCardState extends State<ProductCard> {
                         ],
                       ),
                       Text(
-                        "7 pices",
+                        '${widget.product.quantity} pices',
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.black87,
@@ -123,7 +128,7 @@ class _ProductCardState extends State<ProductCard> {
                         height: 5,
                       ),
                       Text(
-                        "₹50",
+                        '\u{20B9}${widget.product.price}',
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,
@@ -154,6 +159,8 @@ class _ProductCardState extends State<ProductCard> {
                               setState(() {
                                 _tvalue = value;
                               });
+                              AuthAPI.productAvailability(
+                                  widget.product, _tvalue);
                             },
                           ),
                         ],

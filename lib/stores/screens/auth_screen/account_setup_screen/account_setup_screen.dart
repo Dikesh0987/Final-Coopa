@@ -1,6 +1,9 @@
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:coopa/theme/style.dart';
 import '../successful_screen/successfull_screen.dart';
@@ -18,11 +21,67 @@ class AccountSetupScreen extends StatefulWidget {
 }
 
 class _AccountSetupScreenState extends State<AccountSetupScreen> {
+  // Initialize the state
+  @override
+  void initState() {
+    super.initState();
+    // Call the function to initialize all store data
+    _determinePosition();
+    // TODO: Call function to initialize store data
+  }
+
   final _nameTextEditingController = TextEditingController();
   final _passTextEditingController = TextEditingController();
   // Form Key
   final _formKey = GlobalKey<FormState>();
   String? _image;
+
+  // // for Geo loaction corrdinate.
+  String? currentAddress = '';
+  Position? currentposition;
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(
+          msg:
+              'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
+      Placemark place = placemarks[0];
+
+      setState(() {
+        currentposition = position;
+        currentAddress =
+            "${place.locality}, ${place.postalCode}, ${place.country}, ${place.street}";
+      });
+    } catch (e) {
+      print(e);
+    }
+    return position;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +171,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                             height: 60,
                             width: 60,
                             decoration: BoxDecoration(
+                                border: Border.all(color: Primary1),
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.black12),
                             child: Center(
@@ -186,8 +246,12 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    AuthAPI.setupStore(_nameTextEditingController.text,
-                            _passTextEditingController.text)
+                    AuthAPI.setupStore(
+                            _nameTextEditingController.text,
+                            _passTextEditingController.text,
+                            currentAddress!,
+                            currentposition!.latitude,
+                            currentposition!.longitude)
                         .then((value) {
                       Navigator.push(
                           context,
