@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class InventoryWidget extends StatefulWidget {
   final String uid;
 
-  InventoryWidget({required this.uid});
+  const InventoryWidget({super.key, required this.uid});
 
   @override
   _InventoryWidgetState createState() => _InventoryWidgetState();
@@ -24,9 +24,9 @@ class _InventoryWidgetState extends State<InventoryWidget> {
 
   Future<void> _printProductTitles() async {
     QuerySnapshot querySnapshot = await _productsRef.get();
-    querySnapshot.docs.forEach((doc) {
-      print('${doc.id}');
-    });
+    for (var doc in querySnapshot.docs) {
+      print(doc.id);
+    }
   }
 
   @override

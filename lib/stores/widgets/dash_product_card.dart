@@ -1,7 +1,4 @@
-import 'package:coopa/stores/model/product_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DashProductCard extends StatefulWidget {
@@ -39,7 +36,7 @@ class _DashProductCardState extends State<DashProductCard> {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Text(
                   "Mufti T-Shirt",
                   style: TextStyle(

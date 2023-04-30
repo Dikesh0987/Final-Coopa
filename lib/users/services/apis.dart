@@ -1,17 +1,18 @@
 // Import required packages
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coopa/stores/model/store_model.dart';
+import 'package:coopa/users/model/connnection_model.dart';
 import 'package:coopa/users/model/location_model.dart';
 import 'package:coopa/users/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:geolocator/geolocator.dart';
 
 // APIs class provides access to Firebase services
 class APIs {
   // Firebase authentication instance
-  static late final auth = FirebaseAuth.instance;
+  static final auth = FirebaseAuth.instance;
 
   // Firebase Firestore instance
   static final firestore = FirebaseFirestore.instance;
@@ -139,14 +140,62 @@ class APIs {
     return APIs.firestore.collection('stores').snapshots();
   }
 
-  // For geting all stores
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() {
+  // For geting pro stores
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getStores(List sid) {
     return APIs.firestore
-        .collection('inventory')
-        .doc('FWirV87hxBhLrraMDxrMFkJHwQp1')
-        .collection('products')
+        .collection('stores')
+        .where('id', isEqualTo: sid)
         .snapshots();
   }
 
-  /// Make a funtion for all produts addd
+// for get all products according to time ..
+  // For geting all products
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProductsAccToTime() {
+    return APIs.firestore
+        .collection('products')
+        .orderBy('registerAt', descending: true)
+        .snapshots();
+  }
+
+  /// ------- For make new connectuin through ----- ///
+
+  // for create a new connection id ..
+  static String getConnectionID(String id) {
+    return cuser.uid.hashCode <= id.hashCode
+        ? '${cuser.uid}_$id'
+        : '${id}_${cuser.uid}';
+  }
+
+  // for make connection functions ..
+  static Future<void> makeNewConnections(Store store) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final connection = ConnectionModel(
+      connectionId: getConnectionID(store.id),
+      fromId: APIs.uInfo!.id,
+      toId: store.id,
+      status: 'pending',
+      sent: time,
+    );
+
+    final connectionmodel = ConnectionModel(
+      connectionId: getConnectionID(store.id),
+      fromId: APIs.uInfo!.id,
+      toId: store.id,
+      status: 'accept',
+      sent: time,
+    );
+    firestore
+        .collection('users')
+        .doc(APIs.uInfo!.id)
+        .collection('connections_list')
+        .doc(store.id)
+        .set(connection.toJson());
+    firestore
+        .collection('stores')
+        .doc(store.id)
+        .collection('connections_list')
+        .doc(APIs.uInfo!.id)
+        .set(connection.toJson());
+  }
 }

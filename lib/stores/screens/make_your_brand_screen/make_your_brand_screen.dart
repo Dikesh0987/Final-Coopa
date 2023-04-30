@@ -10,10 +10,10 @@ class MakeYourBrandScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         title: Text(

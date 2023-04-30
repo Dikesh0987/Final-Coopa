@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Column(
-                                  children: [
+                                  children: const [
                                     Text(
                                       '58',
                                       style: TextStyle(
@@ -124,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                                   ],
                                 ),
                                 Column(
-                                  children: [
+                                  children: const [
                                     Text(
                                       '1M',
                                       style: TextStyle(
@@ -144,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
                                   ],
                                 ),
                                 Column(
-                                  children: [
+                                  children: const [
                                     Text(
                                       '425',
                                       style: TextStyle(
@@ -189,7 +191,7 @@ class ProfileScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
+                          children: const [
                             SizedBox(
                               width: 2,
                             ),

@@ -1,8 +1,6 @@
 import 'package:coopa/stores/screens/auth_screen/login_screen/forget_pass_otp_verify.dart';
 import 'package:coopa/stores/screens/main_screen/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:coopa/theme/style.dart';
@@ -13,11 +11,11 @@ class PasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -112,12 +110,12 @@ class PasswordScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => MainScreen()));
               },
               color: Primary1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CONTINUE",
                 style: TextStyle(color: Colors.white),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../theme/style.dart';
@@ -11,10 +9,10 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Primary0,
+          backgroundColor: klightGrayClr,
           elevation: 0,
           centerTitle: false,
           title: Text(

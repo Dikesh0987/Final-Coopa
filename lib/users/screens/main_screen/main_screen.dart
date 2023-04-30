@@ -1,7 +1,6 @@
 import 'package:coopa/users/screens/feed_screen/feed_screen.dart';
 import 'package:coopa/users/screens/home_screen/home_screen.dart';
 import 'package:coopa/users/screens/account_screen/settings_screen.dart';
-import 'package:coopa/users/screens/offers_screen/offers_screen.dart';
 import 'package:coopa/users/screens/search_screen/search_screen.dart';
 import 'package:coopa/users/services/apis.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +26,10 @@ class _MainScreenState extends State<MainScreen> {
   // Define the current index of the bottom navigation bar
   int _currentIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(user: APIs.uInfo!,),
+  static final List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(
+      user: APIs.uInfo!,
+    ),
     FeedScreen(),
     SearchScreen(),
     // OffersScreen(),
@@ -52,6 +53,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        elevation: 0,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
@@ -62,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
         showUnselectedLabels: true,
         iconSize: 20,
         onTap: _onItemTapped,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.house),
             label: 'Home',

@@ -1,432 +1,249 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coopa/stores/model/product_model.dart';
+import 'package:coopa/stores/model/store_model.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:coopa/users/screens/notification_screen/notification_screen.dart';
-import 'package:coopa/users/services/apis.dart';
+import 'package:coopa/users/widgets/search_products_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  CollectionReference inventoryRef =
+      FirebaseFirestore.instance.collection('inventory');
+
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: Primary0,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Primary0,
-          elevation: 0,
-          centerTitle: false,
-          title: Text(
-            "Search",
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Colors.black,
-                  size: 20,
-                )),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotificationScreen()));
-                },
-                icon: Icon(
-                  FontAwesomeIcons.bell,
-                  color: Colors.black,
-                  size: 20,
-                ))
-          ],
-        ),
-        body: ListView(
-          padding: EdgeInsets.only(top: 10.0, bottom: 15.0),
-          children: <Widget>[
-            Container(
-              height: 110.0,
-              width: double.infinity,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.all(10.0),
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                          height: 60.0,
-                          width: 60.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(35.0),
-                              color: Colors.orange),
-                          child: IconButton(
-                            icon: Icon(Icons.add),
-                            color: Colors.white,
-                            onPressed: () {},
-                          )),
-                      SizedBox(height: 7.0),
-                      Text('Add To',
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600))
-                    ],
-                  ),
-                  SizedBox(width: 25.0),
-                  listItem('assets/images/dm1.jpg', 'Chris', true),
-                  SizedBox(width: 25.0),
-                  listItem('assets/images/dm1.jpg', 'Hugh', false),
-                  SizedBox(width: 25.0),
-                  listItem('assets/images/dm1.jpg', 'Depp', false),
-                  SizedBox(width: 25.0),
-                  listItem('assets/images/dm1.jpg', 'Tom', false),
-                ],
-              ),
-            ),
-            StreamBuilder(
-              stream: APIs.getAllProducts(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    snapshot.connectionState == ConnectionState.none) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      "Error loading data",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  );
-                } else if (snapshot.hasData) {
-                  final storeList = snapshot.data!.docs
-                      .map((e) => Product.fromJson(e.data()))
-                      .toList();
-
-                  if (storeList.isNotEmpty) {
-                    return ListView.builder(
-                      itemCount: storeList.length,
-                      padding: EdgeInsets.only(top: 5),
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Text("data");
-                      },
-                    );
-                  } else {
-                    return Center(
-                      child: Text(
-                        "No Products found",
-                        style: TextStyle(fontSize: 20),
+      backgroundColor: klightGrayClr,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(children: [
+            //appbar code
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RichText(
+                  text: const TextSpan(
+                      text: 'Welcome ',
+                      style: TextStyle(
+                        color: ksecondaryClr,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
                       ),
-                    );
-                  }
-                } else {
-                  return Container();
-                }
-              },
-            ),
-            SizedBox(height: 15.0),
-            firstStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
-                'assets/images/dm1.jpg'),
-            SizedBox(height: 10.0),
-            secondStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
-                'assets/images/dm1.jpg'),
-            SizedBox(height: 10.0),
-            infoRow(),
-            SizedBox(height: 15.0),
-            firstStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
-                'assets/images/dm1.jpg'),
-            SizedBox(height: 10.0),
-            secondStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
-                'assets/images/dm1.jpg'),
-            SizedBox(height: 10.0),
-            infoRow(),
-            SizedBox(height: 15.0),
-            firstStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
-                'assets/images/dm1.jpg'),
-            SizedBox(height: 10.0),
-            secondStyleRow('assets/images/dm1.jpg', 'assets/images/dm1.jpg',
-                'assets/images/dm1.jpg'),
-            SizedBox(height: 10.0),
-            infoRow(),
-          ],
-        ));
-  }
-
-  Widget infoRow() {
-    return Padding(
-        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-                width: (MediaQuery.of(context).size.width - 30.0) / 2,
-                height: 100.0,
-                child: Column(children: <Widget>[
-                  Text(
-                    'I like the way to place items to show more...',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Montserrat'),
-                  ),
-                  SizedBox(height: 15.0),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                          height: 30.0,
-                          width: 30.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/dm1.jpg'),
-                                  fit: BoxFit.cover)),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Mona Hall',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.orange),
-                            ),
-                            Text(
-                              '10:51PM',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat', color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ])
-                ])),
-            SizedBox(width: 10.0),
-            Container(
-                width: (MediaQuery.of(context).size.width - 30.0) / 2,
-                height: 100.0,
-                child: Column(children: <Widget>[
-                  Text(
-                    'I like the way to place items to show more...',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Montserrat'),
-                  ),
-                  SizedBox(height: 15.0),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                          height: 30.0,
-                          width: 30.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/dm1.jpg'),
-                                  fit: BoxFit.cover)),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Mona Hall',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  color: Colors.orange),
-                            ),
-                            Text(
-                              '10:51PM',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat', color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ])
-                ])),
-          ],
-        ));
-  }
-
-  Widget secondStyleRow(String imgPath1, String imgPath2, String avatarImg) {
-    return Container(
-      height: 250.0,
-      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-      child: Row(
-        children: <Widget>[
-          Container(
-            height: 250.0,
-            width: (MediaQuery.of(context).size.width - 30.0) / 2,
-            child: Container(
-              height: 250.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  image: DecorationImage(
-                      image: AssetImage(imgPath2), fit: BoxFit.cover)),
-            ),
-          ),
-          SizedBox(width: 10.0),
-          Container(
-            height: 250.0,
-            width: (MediaQuery.of(context).size.width - 30.0) / 2,
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'I like the way to place items to show more...',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: 'Montserrat'),
+                      children: [
+                        TextSpan(
+                            text: 'Dikesh',
+                            style: TextStyle(
+                              color: kblackClr,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                            ))
+                      ]),
                 ),
-                SizedBox(height: 15.0),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      height: 30.0,
-                      width: 30.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          image: DecorationImage(
-                              image: AssetImage(avatarImg), fit: BoxFit.cover)),
+                  children: [
+                    const CircleAvatar(
+                      backgroundColor: klightGrayClr,
+                      child: Icon(Icons.search_outlined, color: kblackClr),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Mona Hall',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: 'Montserrat', color: Colors.orange),
-                        ),
-                        Text(
-                          '10:51PM',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: 'Montserrat', color: Colors.grey),
-                        ),
-                      ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotificationScreen()));
+                      },
+                      child: const CircleAvatar(
+                        backgroundColor: klightGrayClr,
+                        child: Icon(Icons.notifications_outlined,
+                            color: kblackClr),
+                      ),
                     )
                   ],
-                ),
-                SizedBox(height: 42.0),
-                Container(
-                  height: 125.0,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                          image: AssetImage(imgPath1), fit: BoxFit.cover)),
-                ),
+                )
               ],
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 15,
+            ),
+            //product Search Section
+            // TextFormField(
+            //   cursorColor: kprimaryClr,
+            //   decoration: InputDecoration(
+            //       fillColor: Primary0,
+            //       filled: true,
+            //       border: OutlineInputBorder(
+            //         borderSide: BorderSide.none,
+            //         borderRadius: BorderRadius.circular(15),
+            //       ),
+            //       hintText: 'Search Here...',
+            //       prefixIcon: const Icon(
+            //         Icons.search,
+            //         color: kprimaryClr,
+            //       )),
+            // ),
+            // const SizedBox(
+            //   height: 15,
+            // ),
+            //category Section
+            // const CategoryCard(),
+
+            const SizedBox(
+              height: 5,
+            ),
+            //product Section
+            // ProductSection(),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('products')
+                    .orderBy('registerAt', descending: true)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  final products = snapshot.data!.docs
+                      .map((doc) =>
+                          Product.fromJson(doc.data()! as Map<String, dynamic>))
+                      .toList();
+
+                  final productIds =
+                      snapshot.data!.docs.map((e) => e.id).toList();
+
+                  return StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('stores')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final stores = snapshot.data!.docs
+                          .map((doc) => Store.fromJson(
+                              doc.data()! as Map<String, dynamic>))
+                          .toList();
+
+                      final Map<String, Store> storeMap = { for (var store in stores) store.id : store };
+
+                      return GridView.builder(
+                        itemCount: products.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                          childAspectRatio: 0.54,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          final product = products[index];
+                          final store = storeMap[product.storeId];
+
+                          return SearchProductCard(
+                              product: product, store: store!);
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            )
+          ]),
+        ),
       ),
     );
   }
-
-  Widget firstStyleRow(String imgPath1, String imgPath2, String avatarImg) {
-    return Container(
-        height: 250.0,
-        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-        child: Row(children: [
-          Container(
-              height: 250.0,
-              width: (MediaQuery.of(context).size.width - 30.0) / 2,
-              child: Column(children: [
-                Container(
-                  height: 125.0,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                          image: AssetImage(imgPath1), fit: BoxFit.cover)),
-                ),
-                SizedBox(height: 15.0),
-                Text('I like the way to place Items to show more...',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Montserrat')),
-                SizedBox(height: 15.0),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                          height: 30.0,
-                          width: 30.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              image: DecorationImage(
-                                  image: AssetImage(avatarImg)))),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Mona Hall',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontFamily: 'Montserrat', color: Colors.orange),
-                          ),
-                          Text(
-                            '10:51PM',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontFamily: 'Montserrat', color: Colors.grey),
-                          ),
-                        ],
-                      )
-                    ])
-              ])),
-          SizedBox(width: 10.0),
-          Container(
-              height: 250.0,
-              width: (MediaQuery.of(context).size.width - 30.0) / 2,
-              child: Container(
-                  height: 250.0,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                          image: AssetImage(imgPath2), fit: BoxFit.cover))))
-        ]));
-  }
-
-  Widget listItem(String imgPath, String name, bool available) {
-    return Column(
-      children: <Widget>[
-        Container(
-          height: 60.0,
-          width: 60.0,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(35.0),
-              image: DecorationImage(
-                  image: AssetImage(imgPath), fit: BoxFit.cover)),
-        ),
-        SizedBox(height: 7.0),
-        Row(
-          children: <Widget>[
-            Text(name,
-                style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600)),
-            SizedBox(width: 4.0),
-            available
-                ? Container(
-                    height: 10.0,
-                    width: 10.0,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Colors.orange),
-                  )
-                : Container()
-          ],
-        )
-      ],
-    );
-  }
 }
+
+
+//  Padding(
+//           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+//           child: StreamBuilder<QuerySnapshot>(
+//             stream: FirebaseFirestore.instance
+//                 .collection('products')
+//                 .orderBy('registerAt', descending: true)
+//                 .snapshots(),
+//             builder:
+//                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//               if (snapshot.hasError) {
+//                 return Text('Something went wrong');
+//               }
+
+//               if (snapshot.connectionState == ConnectionState.waiting) {
+//                 return Center(child: CircularProgressIndicator());
+//               }
+
+//               final products = snapshot.data!.docs
+//                   .map((doc) =>
+//                       Product.fromJson(doc.data()! as Map<String, dynamic>))
+//                   .toList();
+
+//               final productIds = snapshot.data!.docs.map((e) => e.id).toList();
+
+//               return StreamBuilder<QuerySnapshot>(
+//                 stream:
+//                     FirebaseFirestore.instance.collection('stores').snapshots(),
+//                 builder: (BuildContext context,
+//                     AsyncSnapshot<QuerySnapshot> snapshot) {
+//                   if (snapshot.hasError) {
+//                     return Text('Something went wrong');
+//                   }
+
+//                   if (snapshot.connectionState == ConnectionState.waiting) {
+//                     return Center(child: CircularProgressIndicator());
+//                   }
+
+//                   final stores = snapshot.data!.docs
+//                       .map((doc) =>
+//                           Store.fromJson(doc.data()! as Map<String, dynamic>))
+//                       .toList();
+
+//                   final Map<String, Store> storeMap = Map.fromIterable(
+//                     stores,
+//                     key: (store) => store.id,
+//                     value: (store) => store,
+//                   );
+
+//                   return GridView.builder(
+//                     itemCount: products.length,
+//                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                       crossAxisCount: 2,
+//                       crossAxisSpacing: 5,
+//                       mainAxisSpacing: 5,
+//                       childAspectRatio: 0.75,
+//                     ),
+//                     itemBuilder: (BuildContext context, int index) {
+//                       final product = products[index];
+//                       final store = storeMap[product.storeId];
+
+//                       return SearchProductCard(product: product, store: store!);
+//                     },
+//                   );
+//                 },
+//               );
+//             },
+//           ),
+//         )

@@ -1,11 +1,8 @@
 import 'dart:io';
-import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/stores/model/store_model.dart';
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:coopa/stores/widgets/product_card.dart';
-import 'package:coopa/stores/widgets/test.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -41,10 +38,10 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         title: Text(
@@ -122,10 +119,10 @@ class _ProductScreenState extends State<ProductScreen> {
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         builder: (context) {
           return Scaffold(
-              backgroundColor: Primary0,
+              backgroundColor: klightGrayClr,
               appBar: AppBar(
                 automaticallyImplyLeading: false,
-                backgroundColor: Primary0,
+                backgroundColor: klightGrayClr,
                 elevation: 0,
                 centerTitle: false,
                 title: Text(
@@ -376,13 +373,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                 child: MaterialButton(
                                   minWidth: 150,
                                   height: 50,
-                                  child: Text(
-                                    'Add Now',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
                                   color: Colors.black,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
@@ -403,6 +393,13 @@ class _ProductScreenState extends State<ProductScreen> {
                                       Navigator.pop(context);
                                     }
                                   },
+                                  child: Text(
+                                    'Add Now',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ])))),

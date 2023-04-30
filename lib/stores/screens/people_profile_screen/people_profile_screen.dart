@@ -1,16 +1,18 @@
+import 'package:coopa/users/model/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key, required this.user}) : super(key: key);
+  final UserModel user;
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _isOpen = false;
-  PanelController _panelController = PanelController();
-  var _imageList = [
+  final PanelController _panelController = PanelController();
+  final _imageList = [
     'assets/images/camera.png',
     'assets/images/picture.png',
     'assets/images/camera.png',
@@ -48,9 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(
-                      'assets/images/picture.png',
-                    ),
+                    image: NetworkImage(widget.user.images),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -264,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       children: <Widget>[
         Text(
-          'Dikesh netam',
+          widget.user.name,
           style: TextStyle(
             fontFamily: 'NimbusSanL',
             fontWeight: FontWeight.w700,
@@ -275,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage> {
           height: 8,
         ),
         Text(
-          'Juts Dumb',
+          widget.user.about,
           style: TextStyle(
             fontFamily: 'NimbusSanL',
             fontStyle: FontStyle.italic,

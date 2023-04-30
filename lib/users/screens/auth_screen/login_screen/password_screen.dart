@@ -10,11 +10,11 @@ class PasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -109,12 +109,12 @@ class PasswordScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => MainScreen()));
               },
               color: Primary1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CONTINUE",
                 style: TextStyle(color: Colors.white),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

@@ -1,7 +1,6 @@
 import 'package:coopa/stores/model/store_model.dart';
+import 'package:coopa/users/services/apis.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class ShopCard extends StatefulWidget {
   const ShopCard({super.key, required this.store});
@@ -15,15 +14,15 @@ class _ShopCardState extends State<ShopCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 0),
+      margin: EdgeInsets.only(top: 10, bottom: 0),
       decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [
-            new BoxShadow(
-              color: Colors.grey,
-              blurRadius: 0.50,
-            ),
-          ],
+          // boxShadow: [
+          //   new BoxShadow(
+          //     color: Colors.grey,
+          //     blurRadius: 0.50,
+          //   ),
+          // ],
           borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -72,15 +71,16 @@ class _ShopCardState extends State<ShopCard> {
                       height: 10,
                     ),
                     OutlinedButton(
-                      onPressed: () {},
-                      child: Text('Join With Us'),
+                      onPressed: () {
+                        APIs.makeNewConnections(widget.store);
+                      },
                       style: OutlinedButton.styleFrom(
-                        primary: Colors.black,
-                        side: BorderSide(color: Colors.black26),
+                        foregroundColor: Colors.black, side: BorderSide(color: Colors.black26),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      child: Text('Join With Us'),
                     )
                   ],
                 ),

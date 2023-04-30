@@ -11,11 +11,11 @@ class UsersWelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -67,12 +67,12 @@ class UsersWelcomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => LoginScreen()));
               },
               color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "LOGIN",
                 style: TextStyle(color: Primary1),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
             SizedBox(
               height: 20,
@@ -85,12 +85,12 @@ class UsersWelcomeScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => RagisterScreen()));
               },
               color: Primary1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CREATE ACCOUNT",
                 style: TextStyle(color: Colors.white),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

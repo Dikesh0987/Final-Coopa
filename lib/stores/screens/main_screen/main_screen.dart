@@ -32,10 +32,14 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   // Define the list of screens to display in the bottom navigation bar
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    DashboardScreen(store: AuthAPI.cInfo!,),
-    ProductScreen(store: AuthAPI.cInfo!,),
+    DashboardScreen(
+      store: AuthAPI.cInfo!,
+    ),
+    ProductScreen(
+      store: AuthAPI.cInfo!,
+    ),
     PeopleScreen(),
     AccountScreen(
       store: AuthAPI.cInfo!,
@@ -62,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         selectedLabelStyle:
@@ -70,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
         showSelectedLabels: true,
         showUnselectedLabels: true,
         onTap: _onItemTapped,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home),
             label: 'Home',

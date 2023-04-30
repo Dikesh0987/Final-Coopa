@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,8 +9,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:coopa/theme/style.dart';
 import '../successful_screen/successfull_screen.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'dart:io';
 
 class AccountSetupScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     super.initState();
     // Call the function to initialize all store data
     _determinePosition();
-    // TODO: Call function to initialize store data
+    
   }
 
   final _nameTextEditingController = TextEditingController();
@@ -78,7 +78,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             "${place.locality}, ${place.postalCode}, ${place.country}, ${place.street}";
       });
     } catch (e) {
-      print(e);
+      debugPrint('debug: $e');
     }
     return position;
   }
@@ -86,11 +86,11 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -261,12 +261,12 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                   }
                 },
                 color: Primary1,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
                 child: Text(
                   "CREATE ACCOUNT",
                   style: TextStyle(color: Colors.white),
                 ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
               ),
             ],
           ),
@@ -306,13 +306,15 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                             source: ImageSource.gallery, imageQuality: 80);
 
                         if (image != null) {
-                          print("Image Path : ${image.path}");
+                          log("Image Path : ${image.path}" as num);
+                         
                           //update image
                           setState(() {
                             _image = image.path;
                           });
                           AuthAPI.uploadProfilePicture(File(_image!));
                           //for hide bottom sheet
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         }
                       },
@@ -329,13 +331,14 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                             source: ImageSource.camera, imageQuality: 80);
 
                         if (image != null) {
-                          print("Image Path : ${image.path}");
+                          log("Image Path : ${image.path}" as num);
                           //update image
                           setState(() {
                             _image = image.path;
                           });
                           AuthAPI.uploadProfilePicture(File(_image!));
                           //for hide bottom sheet
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         }
                       },

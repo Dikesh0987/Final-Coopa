@@ -1,4 +1,3 @@
-import 'package:coopa/users/helper/dailogs.dart';
 import 'package:coopa/users/screens/auth_screen/successful_screen/successfull_screen.dart';
 import 'package:coopa/users/services/apis.dart';
 import 'package:flutter/material.dart';
@@ -84,11 +83,11 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -259,12 +258,12 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                   }
                 },
                 color: Primary1,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
                 child: Text(
                   "CREATE ACCOUNT",
                   style: TextStyle(color: Colors.white),
                 ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
               ),
             ],
           ),

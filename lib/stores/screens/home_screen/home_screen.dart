@@ -1,8 +1,6 @@
 import 'package:coopa/stores/screens/notification_screen/notification_screen.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,10 +9,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Primary0,
+          backgroundColor: klightGrayClr,
           elevation: 0,
           centerTitle: false,
           title: Text(
@@ -40,7 +38,7 @@ class HomeScreen extends StatelessWidget {
         body: ListView(
           scrollDirection: Axis.vertical,
           padding: EdgeInsets.symmetric(horizontal: 16.0),
-          children: <Widget>[
+          children: const <Widget>[
             ShopItem(),
             ShopItem(),
             ShopItem(),
@@ -56,6 +54,8 @@ class HomeScreen extends StatelessWidget {
 // Home tweat review
 
 class ShopItem extends StatelessWidget {
+  const ShopItem({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -99,7 +99,7 @@ class ShopItem extends StatelessWidget {
                                           MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      children: <Widget>[
+                                      children: const <Widget>[
                                         Text('4.6',
                                             style: TextStyle(
                                                 color: Colors.black,

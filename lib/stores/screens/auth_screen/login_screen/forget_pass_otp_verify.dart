@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import 'package:coopa/theme/style.dart';
 
@@ -10,11 +8,11 @@ class ForgetPassOtpVerify extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -83,7 +81,7 @@ class ForgetPassOtpVerify extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
+              children: const [
                 Text(
                   "Resend OTP",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
@@ -103,12 +101,12 @@ class ForgetPassOtpVerify extends StatelessWidget {
                 //         builder: (context) => AccountSetupScreen()));
               },
               color: Primary1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CONTINUE",
                 style: TextStyle(color: Colors.white),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
             SizedBox(
               height: 30,

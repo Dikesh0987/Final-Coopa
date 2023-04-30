@@ -2,8 +2,6 @@ import 'package:coopa/stores/helper/dailogs.dart';
 import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -33,10 +31,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Primary0,
+          backgroundColor: klightGrayClr,
           elevation: 0,
           centerTitle: false,
           title: Text(
@@ -245,13 +243,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           child: MaterialButton(
                             minWidth: 150,
                             height: 50,
-                            child: Text(
-                              'Save',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
                             color: Colors.black,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
@@ -272,6 +263,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                 });
                               }
                             },
+                            child: Text(
+                              'Save',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
                           ),
                         ),
                       ])))),

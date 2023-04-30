@@ -9,10 +9,10 @@ class HelpCenterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         title: Text(
@@ -43,37 +43,37 @@ class HelpCenterScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                const Text(
+              children: const [
+                SizedBox(height: 20),
+                Text(
                   'Frequently Asked Questions',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 20),
-                const FAQSection(
+                SizedBox(height: 20),
+                FAQSection(
                   question: 'How do I create an account?',
                   answer:
                       'To create an account, click on the Sign Up button and fill in the required information.',
                 ),
-                const SizedBox(height: 10),
-                const FAQSection(
+                SizedBox(height: 10),
+                FAQSection(
                   question: 'How do I reset my password?',
                   answer:
                       'To reset your password, click on the Forgot Password link on the login page and follow the instructions.',
                 ),
-                const SizedBox(height: 20),
-                const Text(
+                SizedBox(height: 20),
+                Text(
                   'Contact Us',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 20),
-                const Text(
+                SizedBox(height: 20),
+                Text(
                   'If you have any questions or need help, please contact us at storesupport@coopa.com',
                 ),
               ],

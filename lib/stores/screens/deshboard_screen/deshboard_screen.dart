@@ -23,7 +23,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         title: Text(
@@ -63,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     Container(
                       child: Row(
-                        children: [
+                        children: const [
                           Text(
                             "Top Products",
                             style: TextStyle(
@@ -108,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Earnings",
+                "Total Views",
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -120,11 +120,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 children: [
                   Icon(
-                    FontAwesomeIcons.dollarSign,
+                    FontAwesomeIcons.eye,
                     color: Colors.white,
                   ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
-                    "8,350",
+                    widget.store!.totalViews,
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   )
                 ],
@@ -225,7 +228,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           borderRadius: BorderRadius.circular(15)),
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             width: 150,
                             child: Row(
                               children: [

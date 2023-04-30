@@ -14,10 +14,10 @@ class _OurCustomersScreenState extends State<OurCustomersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         title: Text(
@@ -45,7 +45,7 @@ class _OurCustomersScreenState extends State<OurCustomersScreen> {
                 height: 10,
               ),
               Row(
-                children: [
+                children: const [
                   usersBox(
                     email: 'dikeshnetam0987@gmail.com',
                     name: 'Dikesh kumar netam',
@@ -57,7 +57,7 @@ class _OurCustomersScreenState extends State<OurCustomersScreen> {
                 ],
               ),
               Row(
-                children: [
+                children: const [
                   usersBox(
                     email: 'dikeshnetam0987@gmail.com',
                     name: 'Dikesh kumar netam',
@@ -69,7 +69,7 @@ class _OurCustomersScreenState extends State<OurCustomersScreen> {
                 ],
               ),
               Row(
-                children: [
+                children: const [
                   usersBox(
                     email: 'dikeshnetam0987@gmail.com',
                     name: 'Dikesh kumar netam',
@@ -143,6 +143,10 @@ class usersBox extends StatelessWidget {
                 ),
                 MaterialButton(
                   minWidth: 100,
+                  color: Colors.black,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                  onPressed: () {},
                   child: Text(
                     'Remove',
                     style: TextStyle(
@@ -150,10 +154,6 @@ class usersBox extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
-                  color: Colors.black,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                  onPressed: () {},
                 ),
                 SizedBox(
                   height: 10,

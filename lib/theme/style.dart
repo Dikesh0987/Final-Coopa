@@ -43,11 +43,7 @@ TextStyle textSemiBold = GoogleFonts.openSans()
 TextStyle label = GoogleFonts.openSans()
     .copyWith(fontWeight: FontWeight.w400, fontSize: 11, color: labelColor);
 
-
-
-
 // for store details
-
 
 Color backgroundColor0 = Color(0xffF8CBDE);
 Color backgroundColor1 = Color(0xffE5EBED);
@@ -77,3 +73,17 @@ TextStyle kTabTextStyleUnSelected = GoogleFonts.nunitoSans(
   fontSize: 24,
   fontWeight: FontWeight.w300,
 );
+
+
+
+
+// new colors 
+
+const kprimaryClr = Color(0xFF613CE6);
+const ksecondaryClr = Color(0xFF5F44B1);
+const kgrayClr = Color(0xFF96A2AE);
+const klightGrayClr = Color(0xFFF8F9FD);
+const kwhiteClr = Colors.white;
+const kblackClr = Colors.black;
+const kbgClr = kwhiteClr;
+ 

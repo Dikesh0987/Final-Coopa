@@ -12,6 +12,7 @@ class Store {
     required this.isOnline,
     required this.pushToken,
     required this.email,
+    required this.totalViews,
     // required this.location,
   });
   late String images;
@@ -24,6 +25,7 @@ class Store {
   late bool isOnline;
   late String pushToken;
   late String email;
+  late String totalViews;
   // late String location;
 
   Store.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class Store {
     isOnline = json["is_online"] ?? false;
     pushToken = json['push_token'] ?? '';
     email = json['email'] ?? '';
+    totalViews = json['totalViews'] ?? '';
     // location = json['location'] ?? '';
   }
 
@@ -52,6 +55,7 @@ class Store {
     data['is_online'] = isOnline;
     data['push_token'] = pushToken;
     data['email'] = email;
+    data['totalViews'] = totalViews;
     // data['location'] = location;
     return data;
   }

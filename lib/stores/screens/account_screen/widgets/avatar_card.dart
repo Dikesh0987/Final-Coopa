@@ -1,6 +1,5 @@
 import 'package:coopa/stores/model/store_model.dart';
 import 'package:coopa/stores/screens/account_screen/constants/constants.dart';
-import 'package:coopa/stores/screens/edit_account_details_screen/edit_account_details_screen.dart';
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -17,7 +16,7 @@ class AvatarCard extends StatefulWidget {
 class _AvatarCardState extends State<AvatarCard> {
   @override
   Widget build(BuildContext context) {
-    bool _tvalue = widget.store.isOnline;
+    bool tvalue = widget.store.isOnline;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -86,12 +85,12 @@ class _AvatarCardState extends State<AvatarCard> {
                       toggleSize: 15.0,
                       borderRadius: 10.0,
                       activeColor: Colors.lightBlue,
-                      value: _tvalue,
+                      value: tvalue,
                       onToggle: (value) {
                         setState(() {
-                          _tvalue = value;
+                          tvalue = value;
                         });
-                        AuthAPI.storeStatus(widget.store, _tvalue);
+                        AuthAPI.storeStatus(widget.store, tvalue);
                       },
                     ),
                   ],

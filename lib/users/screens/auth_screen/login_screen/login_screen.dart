@@ -83,11 +83,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -162,20 +162,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     MaterialPageRoute(builder: (context) => PasswordScreen()));
               },
               color: Primary1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CONTINUE",
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
             SizedBox(
               height: 20,
             ),
             Row(
-              children: [
+              children: const [
                 Expanded(
                   child: Divider(
                     thickness: 2,
@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Text("OR"),
                 ),
                 Expanded(
@@ -201,15 +201,15 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 45,
               minWidth: double.infinity,
               onPressed: () {
-              _handleGoogleBtnClick();
+                _handleGoogleBtnClick();
               },
               color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CONTINUE WiTH GOOGLE",
                 style: TextStyle(color: Primary1),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

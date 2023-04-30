@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Product {
   Product({
     // required this.sid,
-    required this.uniqueId,
+    required this.storeId,
     required this.title,
     required this.price,
     required this.image,
@@ -16,7 +16,7 @@ class Product {
   });
 
   // late String sid;
-  late String uniqueId;
+  late String storeId;
   late String title;
   late String price;
   late String image;
@@ -29,7 +29,7 @@ class Product {
 
   Product.fromJson(Map<String, dynamic> json)
       : 
-        uniqueId = json['uniqueId'] ?? '',
+        storeId = json['storeId'] ?? '',
         title = json['title'] ?? '',
         price = json['price'] ?? '',
         image = json['image'] ?? ' ',
@@ -43,7 +43,7 @@ class Product {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     // data['sid'] = sid;
-    data['uniqueId'] = uniqueId;
+    data['storeId'] = storeId;
     data['title'] = title;
     data['price'] = price;
     data['image'] = image;

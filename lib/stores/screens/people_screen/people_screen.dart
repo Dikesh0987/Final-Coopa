@@ -1,8 +1,11 @@
+
+import 'package:coopa/stores/screens/account_screen/model/model.dart';
+import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:coopa/theme/style.dart';
+import 'package:coopa/users/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../notification_screen/notification_screen.dart';
-import '../our_customers_screen/our_customers_screen.dart';
 import '../people_profile_screen/people_profile_screen.dart';
 
 class PeopleScreen extends StatelessWidget {
@@ -10,11 +13,17 @@ class PeopleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // for all connections
+    List<String> connList = [];
+
+    // for all users ..
+    List<UserModel> list = [];
+
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         title: Text(
@@ -38,111 +47,74 @@ class PeopleScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Our customers",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "290+",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        MaterialButton(
-                          minWidth: 100,
-                          // height: 50,
-                          child: Text(
-                            'See All',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          color: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        OurCustomersScreen()));
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  usersBox(
-                    email: 'dikeshnetam0987@gmail.com',
-                    name: 'Dikesh kumar netam',
-                  ),
-                  usersBox(
-                    email: 'dikeshnetam0987@gmail.com',
-                    name: 'Dikesh kumar netam',
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  usersBox(
-                    email: 'dikeshnetam0987@gmail.com',
-                    name: 'Dikesh kumar netam',
-                  ),
-                  usersBox(
-                    email: 'dikeshnetam0987@gmail.com',
-                    name: 'Dikesh kumar netam',
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  usersBox(
-                    email: 'dikeshnetam0987@gmail.com',
-                    name: 'Dikesh kumar netam',
-                  ),
-                  usersBox(
-                    email: 'dikeshnetam0987@gmail.com',
-                    name: 'Dikesh kumar netam',
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              )
-            ],
-          ),
+        child: StreamBuilder(
+          stream: AuthAPI.getAllStoreConn(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              // if data has been loading
+              case ConnectionState.waiting:
+              case ConnectionState.none:
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+
+              // data lodede
+
+              case ConnectionState.active:
+              case ConnectionState.done:
+                final data = snapshot.data?.docs;
+                connList = data?.map((e) => e.id).toList() ?? [];
+
+                print(connList);
+
+                if (connList.isNotEmpty) {
+                  return StreamBuilder(
+                    stream: AuthAPI.getSalectedUserData(connList),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        // if data has been loading
+                        case ConnectionState.waiting:
+                        case ConnectionState.none:
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+
+                        // data lodede
+
+                        case ConnectionState.active:
+                        case ConnectionState.done:
+                          final data = snapshot.data?.docs;
+                          list = data
+                                  ?.map((e) => UserModel.fromJson(e.data()))
+                                  .toList() ??
+                              [];
+
+                          if (list.isNotEmpty) {
+                            return ListView.builder(
+                                itemCount: list.length,
+                                padding: EdgeInsets.only(top: 5),
+                                physics: BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return usersBox(
+                                    user: list[index],
+                                  );
+                                });
+                          } else {
+                            return Center(
+                              child: Text(
+                                "No Data Found",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            );
+                          }
+                      }
+                    },
+                  );
+                } else {
+                  return Text("datda");
+                }
+            }
+          },
         ),
       ),
     );
@@ -152,10 +124,9 @@ class PeopleScreen extends StatelessWidget {
 class usersBox extends StatelessWidget {
   const usersBox({
     super.key,
-    required this.name,
-    required this.email,
+    required this.user,
   });
-  final String name, email;
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +135,12 @@ class usersBox extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         child: InkWell(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ProfilePage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                          user: user,
+                        )));
           },
           child: Container(
             height: 240,
@@ -183,7 +158,7 @@ class usersBox extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    name,
+                    user.name,
                     maxLines: 2,
                     style: TextStyle(
                         color: Colors.black,
@@ -194,7 +169,7 @@ class usersBox extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    email,
+                    user.email,
                     maxLines: 1,
                     style: TextStyle(
                         color: Colors.black,
@@ -206,17 +181,19 @@ class usersBox extends StatelessWidget {
                   ),
                   MaterialButton(
                     minWidth: 100,
+                    color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                    onPressed: () async {
+                      await AuthAPI.dropConnections(store!);
+                    },
                     child: Text(
-                      'Invite',
+                      'Kick Out',
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
                     ),
-                    color: Colors.black,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                    onPressed: () {},
                   ),
                   SizedBox(
                     height: 10,

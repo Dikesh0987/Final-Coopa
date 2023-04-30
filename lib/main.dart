@@ -23,7 +23,6 @@ void main() async {
       // Handle error
       // print('Failed to initialize Firebase: $e');
     }
-
     runApp(const MyApp());
   });
 }

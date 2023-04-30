@@ -21,10 +21,10 @@ class _DetailEditPageState extends State<DetailEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         title: Text(
@@ -178,13 +178,6 @@ class _DetailEditPageState extends State<DetailEditPage> {
                     child: MaterialButton(
                       minWidth: 100,
                       height: 50,
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
                       color: Colors.black,
                       shape: RoundedRectangleBorder(
                           borderRadius:
@@ -199,6 +192,13 @@ class _DetailEditPageState extends State<DetailEditPage> {
                           });
                         }
                       },
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
                     ),
                   ),
                 ],

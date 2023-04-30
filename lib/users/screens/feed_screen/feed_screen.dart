@@ -1,79 +1,153 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coopa/stores/helper/my_date_util.dart';
+import 'package:coopa/stores/model/product_model.dart';
+import 'package:coopa/stores/model/store_model.dart';
 import 'package:coopa/theme/style.dart';
-import 'package:coopa/users/screens/feed_screen/components.dart';
 import 'package:coopa/users/screens/notification_screen/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:ui';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FeedScreen extends StatefulWidget {
-  static String routeName = "/home";
+  const FeedScreen({super.key});
+
   @override
-  _State createState() => _State();
+  State<FeedScreen> createState() => _FeedScreenState();
 }
 
-class _State extends State<FeedScreen> {
+class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
           statusBarColor: Colors.white,
           statusBarBrightness: Brightness.dark,
           statusBarIconBrightness: Brightness.dark),
     );
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Primary0,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Primary0,
-          elevation: 0,
-          centerTitle: false,
-          title: Text(
-            "Feed",
-            style: TextStyle(
-                color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotificationScreen()));
-                },
-                icon: Icon(
-                  FontAwesomeIcons.bell,
-                  color: Colors.black,
-                  size: 20,
-                ))
-          ],
-        ),
-        body: Container(
-          color: Colors.white,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 5,
-                ),
-                ...List.generate(
-                  posts.length,
-                  (index) {
-                    Map post = posts[index];
-                    return HomeCard(
-                      dp: post["dp"],
-                      name: post['name'],
-                      img: "assets/images/dm$index.jpg",
-                      des: post['des'],
-                      hash: post['hash'],
-                    );
-                  },
-                ),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: klightGrayClr,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: const TextSpan(
+                        text: 'Welcome ',
+                        style: TextStyle(
+                          color: ksecondaryClr,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        children: [
+                          TextSpan(
+                              text: 'Dikesh',
+                              style: TextStyle(
+                                color: kblackClr,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                              ))
+                        ]),
+                  ),
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        backgroundColor: klightGrayClr,
+                        child: Icon(Icons.search_outlined, color: kblackClr),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NotificationScreen()));
+                        },
+                        child: const CircleAvatar(
+                          backgroundColor: klightGrayClr,
+                          child: Icon(Icons.notifications_outlined,
+                              color: kblackClr),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: Container(
+                    color: Colors.white,
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('products')
+                          .orderBy('registerAt', descending: true)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Something went wrong');
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        final products = snapshot.data!.docs
+                            .map((doc) => Product.fromJson(
+                                doc.data()! as Map<String, dynamic>))
+                            .toList();
+
+                        final productIds =
+                            snapshot.data!.docs.map((e) => e.id).toList();
+
+                        return StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('stores')
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Something went wrong');
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+
+                            final stores = snapshot.data!.docs
+                                .map((doc) => Store.fromJson(
+                                    doc.data()! as Map<String, dynamic>))
+                                .toList();
+
+                            final Map<String, Store> storeMap =
+                                { for (var store in stores) store.id : store };
+
+                            return ListView.builder(
+                              itemCount: products.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final product = products[index];
+                                final store = storeMap[product.storeId];
+
+                                return HomeCard(
+                                    product: product, store: store!);
+                              },
+                            );
+                          },
+                        );
+                      },
+                    )),
+              ),
+            ],
           ),
         ),
       ),
@@ -81,21 +155,28 @@ class _State extends State<FeedScreen> {
   }
 }
 
+// ...List.generate(
+//   posts.length,
+//   (index) {
+//     Map post = posts[index];
+//     return HomeCard(
+//       dp: post["dp"],
+//       name: post['name'],
+//       img: "assets/images/dm$index.jpg",
+//       des: post['des'],
+//       hash: post['hash'],
+//     );
+//   },
+// ),
 class HomeCard extends StatefulWidget {
-  final String? dp;
-  final String? name;
-  final String? des;
-  final String img;
-  final String? hash;
+  final Product product;
+  final Store store;
 
-  HomeCard(
-      {Key? key,
-      required this.dp,
-      required this.name,
-      required this.des,
-      required this.hash,
-      required this.img})
-      : super(key: key);
+  const HomeCard({
+    Key? key,
+    required this.product,
+    required this.store,
+  }) : super(key: key);
   @override
   _HomeCardState createState() => _HomeCardState();
 }
@@ -105,11 +186,11 @@ class _HomeCardState extends State<HomeCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
             child: ShaderMask(
               shaderCallback: (rect) {
                 return LinearGradient(
@@ -128,7 +209,7 @@ class _HomeCardState extends State<HomeCard> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(widget.img),
+                    image: NetworkImage(widget.product.image),
                   ),
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -137,7 +218,7 @@ class _HomeCardState extends State<HomeCard> {
           ),
           //Side-bar Container
           Positioned(
-            right: -5,
+            right: 5,
             top: MediaQuery.of(context).size.shortestSide < 600
                 ? (MediaQuery.of(context).size.width * 1.45 -
                         MediaQuery.of(context).size.width * 1.25) /
@@ -147,24 +228,12 @@ class _HomeCardState extends State<HomeCard> {
                     2,
             child: Stack(
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.shortestSide < 600
-                      ? 115
-                      : 180,
+                SizedBox(
+                  width:
+                      MediaQuery.of(context).size.shortestSide < 600 ? 80 : 180,
                   height: MediaQuery.of(context).size.shortestSide < 600
                       ? MediaQuery.of(context).size.width * 1.25
                       : MediaQuery.of(context).size.width * 0.7,
-                  child: ClipPath(
-                    clipper: MyCustomClipper(),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: SvgPicture.asset(
-                        "assets/icons/side-bar.svg",
-                        color: Color(0xffc9c9c9).withOpacity(0.5),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
                 ),
                 Positioned(
                     top: 0,
@@ -194,7 +263,9 @@ class _HomeCardState extends State<HomeCard> {
                                     isLiked
                                         ? "assets/icons/heart-shape-silhouette.svg"
                                         : "assets/icons/heart-shape-outine.svg",
-                                    color: Color(0xffffffff),
+                                    color: isLiked
+                                        ? Colors.red.shade500
+                                        : Color(0xffffffff),
                                   )),
                             ),
                             onTap: () {
@@ -214,7 +285,7 @@ class _HomeCardState extends State<HomeCard> {
                               padding: const EdgeInsets.all(17.0),
                               child: SvgPicture.asset(
                                 "assets/icons/comment-option.svg",
-                                color: Color(0xffffffff),
+                                color: const Color(0xffffffff),
                               ),
                             ),
                           ),
@@ -229,7 +300,7 @@ class _HomeCardState extends State<HomeCard> {
                               padding: const EdgeInsets.all(17.0),
                               child: SvgPicture.asset(
                                 "assets/icons/bookmark-black-shape.svg",
-                                color: Color(0xffffffff),
+                                color: const Color(0xffffffff),
                               ),
                             ),
                           ),
@@ -244,7 +315,7 @@ class _HomeCardState extends State<HomeCard> {
                               padding: const EdgeInsets.all(17.0),
                               child: SvgPicture.asset(
                                 "assets/icons/plane.svg",
-                                color: Color(0xffffffff),
+                                color: const Color(0xffffffff),
                               ),
                             ),
                           ),
@@ -265,46 +336,72 @@ class _HomeCardState extends State<HomeCard> {
                   Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: AssetImage(widget.dp!),
-                        radius: 25,
+                        backgroundImage: NetworkImage(widget.store.images),
+                        radius: 22,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        widget.name!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 200,
+                            child: Text(
+                              widget.store.name,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            MyDateUtil.getFormattedTime(context: context, time: widget.product.registerAt),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
+                  const SizedBox(
+                    height: 15,
                   ),
                   Text(
-                    "It is a long established fact that a reader will be distracted by it",
+                    widget.product.description,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 15,
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.hash!,
+                  SizedBox(
+                    height: 5,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'This item costs   ',
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: '\u{20B9}${widget.product.price}',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff00d289),
-                            fontSize: 18,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
                           ),
                         ),
-                      ),
-                    ],
+                        TextSpan(
+                          text: '  \u{20B9}${widget.product.discount}',
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -314,33 +411,4 @@ class _HomeCardState extends State<HomeCard> {
       ),
     );
   }
-}
-
-class MyCustomClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.lineTo(size.width * 0.64, size.height * 0.1);
-    path.cubicTo(size.width * 0.64, size.height * 0.1, size.width * 0.38,
-        size.height * 0.1, size.width * 0.38, size.height * 0.1);
-    path.cubicTo(size.width * 0.17, size.height * 0.1, 0, size.height * 0.14, 0,
-        size.height / 5);
-    path.cubicTo(
-        0, size.height / 5, 0, size.height * 0.8, 0, size.height * 0.8);
-    path.cubicTo(0, size.height * 0.86, size.width * 0.17, size.height * 0.9,
-        size.width * 0.38, size.height * 0.9);
-    path.cubicTo(size.width * 0.38, size.height * 0.9, size.width * 0.64,
-        size.height * 0.9, size.width * 0.64, size.height * 0.9);
-    path.cubicTo(size.width * 0.84, size.height * 0.9, size.width,
-        size.height * 0.95, size.width, size.height);
-    path.cubicTo(size.width, size.height, size.width, 0, size.width, 0);
-    path.cubicTo(size.width, size.height * 0.05, size.width * 0.84,
-        size.height * 0.1, size.width * 0.64, size.height * 0.1);
-    path.cubicTo(size.width * 0.64, size.height * 0.1, size.width * 0.64,
-        size.height * 0.1, size.width * 0.64, size.height * 0.1);
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

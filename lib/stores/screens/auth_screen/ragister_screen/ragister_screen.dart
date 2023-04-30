@@ -1,7 +1,6 @@
 import 'package:coopa/stores/helper/dailogs.dart';
 import 'package:coopa/stores/screens/auth_screen/account_setup_screen/account_setup_screen.dart';
 import 'package:coopa/stores/screens/auth_screen/ragister_screen/otp_verify.dart';
-import 'package:coopa/stores/screens/main_screen/main_screen.dart';
 import 'package:coopa/theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -74,11 +73,11 @@ class _RagisterScreenState extends State<RagisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -153,18 +152,18 @@ class _RagisterScreenState extends State<RagisterScreen> {
                     MaterialPageRoute(builder: (context) => OtpVerify()));
               },
               color: Primary1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CREATE ACCOUNT",
                 style: TextStyle(color: Colors.white),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
             SizedBox(
               height: 20,
             ),
             Row(
-              children: [
+              children: const [
                 Expanded(
                   child: Divider(
                     thickness: 2,
@@ -172,7 +171,7 @@ class _RagisterScreenState extends State<RagisterScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Text("OR"),
                 ),
                 Expanded(
@@ -193,12 +192,12 @@ class _RagisterScreenState extends State<RagisterScreen> {
                 _handleGoogleBtnClick();
               },
               color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CONTINUE WiTH GOOGLE",
                 style: TextStyle(color: Primary1),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

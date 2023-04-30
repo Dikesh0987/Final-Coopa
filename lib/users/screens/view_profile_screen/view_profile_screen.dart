@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ViewProfileScreen extends StatefulWidget {
+  const ViewProfileScreen({super.key});
+
   @override
   _ViewProfileScreenState createState() => _ViewProfileScreenState();
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
   bool _isOpen = false;
-  PanelController _panelController = PanelController();
-  var _imageList = [
+  final PanelController _panelController = PanelController();
+  final _imageList = [
     'assets/images/camera.png',
     'assets/images/picture.png',
     'assets/images/camera.png',
@@ -262,7 +263,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   /// Title Section
   Column _titleSection() {
     return Column(
-      children: <Widget>[
+      children: const <Widget>[
         Text(
           'Dikesh netam',
           style: TextStyle(

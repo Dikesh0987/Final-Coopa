@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
             "${place.locality}, ${place.postalCode}, ${place.country}, ${place.street}";
       });
     } catch (e) {
-      print(e);
+      debugPrint('debug: $e');
     }
     return position;
   }

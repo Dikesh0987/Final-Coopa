@@ -7,18 +7,10 @@ import 'package:coopa/stores/model/store_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
 
 // A class for handling authentication and store related functions
 class AuthAPI {
-  static late final auth =
+  static final auth =
       FirebaseAuth.instance; // Firebase authentication instance
   static final firestore =
       FirebaseFirestore.instance; // Firebase Firestore instance
@@ -50,6 +42,7 @@ class AuthAPI {
       isOnline: true,
       pushToken: '',
       email: cstore.email.toString(),
+      totalViews: '0'
       // location: 'location',
     );
 
@@ -107,6 +100,7 @@ class AuthAPI {
       isOnline: true,
       pushToken: '',
       email: cstore.email.toString(),
+      totalViews: '0'
       // location: 'location',
     );
 
@@ -177,9 +171,9 @@ class AuthAPI {
   static Future<void> addNewProduct(String title, price, discount, quantity,
       description, File imagefile) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
-    final pId = new DateTime.now().millisecondsSinceEpoch;
+    final pId = DateTime.now().millisecondsSinceEpoch;
     final product = Product(
-        uniqueId: cstore.uid,
+        storeId: cstore.uid,
         title: title,
         price: price,
         image: '',
@@ -191,8 +185,6 @@ class AuthAPI {
         description: description);
 
     await firestore
-        .collection('inventory')
-        .doc(cstore.uid)
         .collection('products')
         .doc(time)
         .set(product.toJson()); // Add the new store to Firestore database
@@ -200,7 +192,7 @@ class AuthAPI {
     final ext = imagefile.path.split('.').last;
 
     final ref =
-        storage.ref().child('products_images/${cstore.uid}/${pId}.$ext');
+        storage.ref().child('products_images/${cstore.uid}/$pId.$ext');
 
     // Upload the file to Firebase Storage
     final snapshot = await ref.putFile(
@@ -210,12 +202,7 @@ class AuthAPI {
     final storageImageUrl = await snapshot.ref.getDownloadURL();
 
     try {
-      await FirebaseFirestore.instance
-          .collection('inventory')
-          .doc(cstore.uid)
-          .collection('products')
-          .doc(time)
-          .update({
+      await FirebaseFirestore.instance.collection('products').doc(time).update({
         'image': storageImageUrl,
       });
     } catch (e) {
@@ -228,19 +215,10 @@ class AuthAPI {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts(
       String sId) {
     return AuthAPI.firestore
-        .collection('inventory')
-        .doc('${cstore.uid.toString()}')
         .collection('products')
+        .where('storeId', isEqualTo: cstore.uid.toString())
         .snapshots();
   }
-
-  //  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() {
-  //   return AuthAPI.firestore
-  //       .collection('inventory')
-  //     .doc(cstore.uid)
-  //     .collection('products')
-  //     .snapshots();
-  // }
 
   // update product details
   static Future<void> updateProductData(String title, price, quantity, discount,
@@ -254,8 +232,6 @@ class AuthAPI {
 
     try {
       await FirebaseFirestore.instance
-          .collection('inventory')
-          .doc('${cstore.uid.toString()}')
           .collection('products')
           .doc(ragisterAtid)
           .update({
@@ -282,8 +258,6 @@ class AuthAPI {
 
     try {
       await FirebaseFirestore.instance
-          .collection('inventory')
-          .doc('${cstore.uid.toString()}')
           .collection('products')
           .doc(product.registerAt)
           .update({
@@ -307,8 +281,6 @@ class AuthAPI {
     try {
       // Delete the product document from Firestore
       await FirebaseFirestore.instance
-          .collection('inventory')
-          .doc(cstore.uid)
           .collection('products')
           .doc(product.registerAt)
           .delete();
@@ -334,7 +306,7 @@ class AuthAPI {
     try {
       await FirebaseFirestore.instance
           .collection('store')
-          .doc('${cstore.uid.toString()}')
+          .doc(cstore.uid.toString())
           .update({
         'isOnline': status,
       });
@@ -342,5 +314,39 @@ class AuthAPI {
       // Handle the error gracefully
       print('Failed to update store status: $e');
     }
+  }
+
+  /// -- get all users connections --- ///
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllStoreConn() {
+    return AuthAPI.firestore
+        .collection('stores')
+        .doc(AuthAPI.cstore.uid)
+        .collection('connections_list')
+        .where('status', isEqualTo: 'pending')
+        .snapshots();
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getSalectedUserData(
+      List<String> sId) {
+    return AuthAPI.firestore
+        .collection('users')
+        .where('id', whereIn: sId)
+        .snapshots();
+  }
+
+  // for make connection functions ..
+  static Future<void> dropConnections(Store store) async {
+    firestore
+        .collection('users')
+        .doc(AuthAPI.cstore.uid)
+        .collection('connections_list')
+        .doc(store.id)
+        .delete();
+    firestore
+        .collection('stores')
+        .doc(store.id)
+        .collection('connections_list')
+        .doc(AuthAPI.cstore.uid)
+        .delete();
   }
 }

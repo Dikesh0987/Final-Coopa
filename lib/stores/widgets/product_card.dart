@@ -2,8 +2,6 @@ import 'package:coopa/stores/model/product_model.dart';
 import 'package:coopa/stores/screens/edit_product_screen/edit_product_screen.dart';
 import 'package:coopa/stores/services/auth_apis.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:share/share.dart';
 
@@ -18,7 +16,7 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    bool _tvalue = widget.product.isAvailable;
+    bool tvalue = widget.product.isAvailable;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: InkWell(
@@ -55,12 +53,15 @@ class _ProductCardState extends State<ProductCard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            widget.product.title,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
+                          Expanded(
+                            child: Text(
+                              widget.product.title,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                           PopupMenuButton(
                             padding: EdgeInsets.all(0),
@@ -154,13 +155,13 @@ class _ProductCardState extends State<ProductCard> {
                             toggleSize: 15.0,
                             borderRadius: 10.0,
                             activeColor: Colors.lightBlue,
-                            value: _tvalue,
+                            value: tvalue,
                             onToggle: (value) {
                               setState(() {
-                                _tvalue = value;
+                                tvalue = value;
                               });
                               AuthAPI.productAvailability(
-                                  widget.product, _tvalue);
+                                  widget.product, tvalue);
                             },
                           ),
                         ],

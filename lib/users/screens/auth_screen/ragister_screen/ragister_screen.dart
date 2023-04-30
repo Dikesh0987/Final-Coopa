@@ -18,7 +18,7 @@ class RagisterScreen extends StatefulWidget {
 }
 
 class _RagisterScreenState extends State<RagisterScreen> {
-    /// Handel google btn
+  /// Handel google btn
   _handleGoogleBtnClick() async {
     // internet/wifi connection issue
     try {
@@ -69,14 +69,15 @@ class _RagisterScreenState extends State<RagisterScreen> {
     // Once signed in, return the UserCredential
     return await APIs.auth.signInWithCredential(credential);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Primary0,
+      backgroundColor: klightGrayClr,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         title: Text(
           "Coopa",
           style: TextStyle(
@@ -151,18 +152,18 @@ class _RagisterScreenState extends State<RagisterScreen> {
                     MaterialPageRoute(builder: (context) => OtpVerify()));
               },
               color: Primary1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CREATE ACCOUNT",
                 style: TextStyle(color: Colors.white),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
             SizedBox(
               height: 20,
             ),
             Row(
-              children: [
+              children: const [
                 Expanded(
                   child: Divider(
                     thickness: 2,
@@ -170,7 +171,7 @@ class _RagisterScreenState extends State<RagisterScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Text("OR"),
                 ),
                 Expanded(
@@ -187,16 +188,16 @@ class _RagisterScreenState extends State<RagisterScreen> {
             MaterialButton(
               height: 45,
               minWidth: double.infinity,
-              onPressed: () { 
-               _handleGoogleBtnClick();
+              onPressed: () {
+                _handleGoogleBtnClick();
               },
               color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               child: Text(
                 "CONTINUE WiTH GOOGLE",
                 style: TextStyle(color: Primary1),
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
             ),
           ],
         ),

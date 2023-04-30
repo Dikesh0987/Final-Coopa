@@ -2,6 +2,8 @@ import 'package:coopa/users/screens/main_screen/main_screen.dart';
 import 'package:flutter/material.dart';
 
 class SuccessAnimation extends StatefulWidget {
+  const SuccessAnimation({super.key});
+
   @override
   _SuccessAnimationState createState() => _SuccessAnimationState();
 }

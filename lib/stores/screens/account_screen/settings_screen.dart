@@ -21,6 +21,7 @@ class AccountScreen extends StatefulWidget {
   final Store store;
 
   @override
+  // ignore: library_private_types_in_public_api
   _AccountScreenState createState() => _AccountScreenState();
 }
 
@@ -29,7 +30,7 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Primary0,
+        backgroundColor: klightGrayClr,
         elevation: 0,
         centerTitle: false,
         automaticallyImplyLeading: false,
